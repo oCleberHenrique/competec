@@ -1,0 +1,60 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: competec_db
+    environment:
+      POSTGRES_DB: competec_db
+      POSTGRES_USER: competec_user
+      POSTGRES_PASSWORD: competec_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - competec_network
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: competec_backend
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://competec_user:competec_password@db:5432/competec_db
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,backend
+    networks:
+      - competec_network
+
+  # --- AQUI ENTRA O NOVO SERVIÇO ---
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: dev
+    container_name: competec_frontend
+    # WATCHPACK é essencial para Windows atualizar a tela quando vc muda código
+    environment:
+      - WATCHPACK_POLLING=true 
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - competec_network
+
+networks:
+  competec_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

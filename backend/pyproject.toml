@@ -1,0 +1,21 @@
+[project]
+name = "competec-backend"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "django==5.1.4",
+    "djangorestframework>=3.15.2",
+    "psycopg[binary,pool]>=3.2.1",
+    "django-cors-headers>=4.4.0",
+    "django-unfold>=0.35.0",
+    "uvicorn>=0.30.0",
+    "gunicorn>=23.0.0",
+    "dj-database-url>=3.0.1",
+    "whitenoise>=6.11.0",
+    "djangorestframework-simplejwt>=5.5.1",
+    "pillow>=12.0.0",
+    "django-ckeditor>=6.7.0",
+]
+
+[tool.uv]
+dev-dependencies = []

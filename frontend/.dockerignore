@@ -1,0 +1,21 @@
+# Ignora dependências locais (o Docker instala as dele)
+node_modules
+.pnp
+.pnp.js
+
+# Ignora builds locais
+.next
+out
+build
+dist
+
+# Ignora logs e arquivos de sistema
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+
+# Ignora Git
+.git
+.gitignore

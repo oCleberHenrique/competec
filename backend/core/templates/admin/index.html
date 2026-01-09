@@ -1,0 +1,77 @@
+{% extends "unfold/layouts/base_simple.html" %}
+{% load i18n static %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block title %}
+    {{ title }} | {{ site_title|default:_('Django site admin') }}
+{% endblock %}
+
+{% block content %}
+  {% include "unfold/helpers/messages.html" %}
+
+  <div class="flex flex-col gap-8 max-w-5xl mx-auto">
+      
+      <div class="flex justify-center py-8">
+          <img src="{% static 'img/logo-cliente-clean.svg' %}" alt="Logo Competec" class="h-20 object-contain block dark:hidden">
+          <img src="{% static 'img/logo-cliente.svg' %}" alt="Logo Competec Dark" class="h-20 object-contain hidden dark:block">
+      </div>
+
+      <div class="!bg-white dark:!bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors duration-200">
+          
+          <div class="bg-gray-50 dark:bg-gray-900/50 px-8 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100">
+                  Bem-vindo ao Painel Administrativo
+              </h2>
+          </div>
+
+          <div class="p-8 space-y-6">
+              
+              <div class="!bg-amber-50 dark:!bg-amber-900/40 !border-l-4 !border-amber-500 p-4 rounded-r-sm">
+                  <div class="flex">
+                      <div class="flex-shrink-0">
+                        <span class="text-xl">⚠️</span>
+                      </div>
+                      <div class="ml-3">
+                          <p class="text-sm font-bold !text-amber-800 dark:!text-amber-100">
+                              Atenção ao excluir dados:
+                          </p>
+                          <p class="text-sm font-medium !text-amber-700 dark:!text-amber-200 mt-1">
+                              Uma vez excluído, o conteúdo terá que ser inserido novamente. Não há lixeira.
+                          </p>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="text-gray-600 dark:text-gray-300 space-y-3">
+                  <p class="font-bold text-gray-800 dark:text-white">Recomendações de uso:</p>
+                  <ul class="list-disc pl-5 space-y-2">
+                      <li>Para inserir os dados, preencha todos os campos corretamente. A atualização no site é em <strong>tempo real</strong>.</li>
+                      <li>
+                          <strong>Imagens:</strong> Envie sempre no formato <strong>JPG ou PNG</strong>. 
+                          Otimize as imagens antes de subir.
+                      </li>
+                      <li>Utilize o menu lateral esquerdo para navegar entre as seções.</li>
+                  </ul>
+              </div>
+
+              <div class="h-px bg-gray-200 dark:bg-gray-700 w-full"></div>
+
+              <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
+                  <span class="text-gray-500 dark:text-gray-400">
+                      Precisa de ajuda?
+                  </span>
+                  <a href="mailto:suporte@v4company.com" class="font-bold text-[#E65100] hover:text-[#ff6d1f] hover:underline">
+                      suporte@v4company.com
+                  </a>
+              </div>
+          </div>
+      </div>
+
+      <div class="mt-12 flex flex-col items-center justify-center gap-3 opacity-70 hover:opacity-100 transition-opacity">
+          <p class="text-xs font-medium text-gray-400 uppercase tracking-widest">Tecnologia e Performance</p>
+          <img src="{% static 'img/logo_v4Company.png' %}" alt="V4 Company" class="h-8 object-contain grayscale hover:grayscale-0 transition-all filter dark:invert dark:brightness-0 dark:invert-1"> 
+      </div>
+
+  </div>
+{% endblock %}
