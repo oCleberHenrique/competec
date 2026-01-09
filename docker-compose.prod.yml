@@ -22,7 +22,7 @@ services:
     environment:
       - POSTGRES_DB=competec
       - POSTGRES_USER=competec_user
-      - POSTGRES_PASSWORD=zBb}5sLOQLk`<8xlo8)c+/H3v/£1Fd<Ci
+      - POSTGRES_PASSWORD=hD80D9jLUhu6gJzgwuEefwABJuHiWt49N
     restart: always
 
 volumes:
