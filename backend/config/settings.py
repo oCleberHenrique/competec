@@ -132,8 +132,12 @@ REST_FRAMEWORK = {
 
 # --- Configuração CORS ---
 CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "https://competec.v4jasson.com.br",
+    "https://v4jasson.com.br",
+]
 CORS_ALLOW_CREDENTIALS = True
-
 # --- UNFOLD ADMIN CONFIGURATION ---
 UNFOLD = {
     "SITE_TITLE": "Competec Admin",
