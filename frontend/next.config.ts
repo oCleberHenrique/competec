@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     // Se as imagens continuarem dando erro, descomente a linha abaixo (tira a proteção de otimização):
-    // unoptimized: true, 
+    unoptimized: true, 
     
     remotePatterns: [
       // 1. REGRA DE PRODUÇÃO (ESSENCIAL - Adicionada agora)
