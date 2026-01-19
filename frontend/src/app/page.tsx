@@ -38,11 +38,10 @@ interface HomeData {
     order: number;
   }>;
 
-  // CORRIGIDO AQUI: Adicionei o campo 'slug'
   services: Array<{
     id: number;
     title: string;
-    slug: string; // <--- O erro estava aqui (faltava essa linha)
+    slug: string; // <--- AQUI ESTÁ A CORREÇÃO
     description: string;
     icon: string | null;
     order: number;
@@ -124,8 +123,7 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // O parametro '?t=' evita cache do navegador durante desenvolvimento
-        // CORRIGIDO: Aponta para o endpoint da API
+        // CORRIGIDO: Aponta para o endpoint da API usando variável de ambiente
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/home/`, {
             cache: 'no-store'
         });
