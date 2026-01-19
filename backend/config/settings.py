@@ -312,4 +312,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://competec.v4jasson.com.br",
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
