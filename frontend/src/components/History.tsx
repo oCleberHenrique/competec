@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getImageUrl } from "@/lib/utils"; // <--- 1. IMPORTAÇÃO ADICIONADA
 
 interface HistoryData {
   tag: string;
@@ -15,34 +16,24 @@ interface HistoryProps {
 export function History({ data }: HistoryProps) {
   if (!data) return null;
 
-  // CORRIGIDO: Usa a variável de ambiente em vez de localhost
-  const imageUrl = data.image.startsWith("http") 
-    ? data.image 
-    : `${process.env.NEXT_PUBLIC_API_URL}${data.image}`;
+  // (Removemos a variável manual 'imageUrl' daqui)
 
   // --- FUNÇÃO PARA FORMATAR O TÍTULO ---
-  // Procura a palavra "Competec", quebra a linha antes e pinta de laranja
   const formatTitle = (text: string) => {
-    // Se não tiver a palavra Competec, retorna o texto normal
     if (!text.toLowerCase().includes("competec")) {
       return text;
     }
 
-    // Separa o texto em antes e depois da palavra "Competec"
-    // O regex /Competec/i ignora maiúsculas/minúsculas
     const parts = text.split(/(Competec.*)/i);
-
-    // parts[0] = "Quem é a "
-    // parts[1] = "Competec?" (o resto da frase)
     
     if (parts.length < 2) return text;
 
     return (
       <>
         {parts[0]}
-        <br /> {/* A quebra de linha forçada */}
+        <br />
         <span className="text-[#E65100]">
-          {parts[1]} {/* O nome Competec + pontuação */}
+          {parts[1]}
         </span>
       </>
     );
@@ -79,7 +70,7 @@ export function History({ data }: HistoryProps) {
             {/* Design Arredondado Orgânico */}
             <div className="relative h-full w-full overflow-hidden rounded-[32px] border border-gray-600/30 shadow-2xl">
               <Image 
-                src={imageUrl} 
+                src={getImageUrl(data.image)} // <--- 2. USO DA FUNÇÃO AQUI
                 alt="Quem é a Competec"
                 fill
                 className="object-cover"

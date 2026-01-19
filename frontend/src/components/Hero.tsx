@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { getImageUrl } from "@/lib/utils"; // <--- 1. IMPORTAÇÃO ADICIONADA
 
 interface HeroProps {
   data: {
@@ -15,10 +16,7 @@ export function Hero({ data }: HeroProps) {
   // console.log("DADOS RECEBIDOS NO HERO:", data);
   if (!data) return null;
 
-  // CORRIGIDO: Usa a variável de ambiente em vez de localhost
-  const imageUrl = data.image.startsWith("http") 
-    ? data.image 
-    : `${process.env.NEXT_PUBLIC_API_URL}${data.image}`;
+  // (Removemos a lógica manual antiga daqui)
 
   return (
     <section className="relative flex min-h-[700px] w-full items-center justify-center bg-white pt-[140px] pb-20">
@@ -44,10 +42,9 @@ export function Hero({ data }: HeroProps) {
         </div>
 
         {/* DIREITA: Imagem */}
-        {/* O group-hover e transition dão um charme extra se passar o mouse */}
         <div className="relative h-[400px] lg:h-[600px] w-full flex justify-end">
            <Image 
-             src={imageUrl} 
+             src={getImageUrl(data.image)} // <--- 2. USO DA FUNÇÃO AQUI
              alt={data.title}
              fill
              className="object-contain lg:object-right rounded-2xl"

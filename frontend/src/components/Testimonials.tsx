@@ -5,6 +5,7 @@ import { Quote, Star } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
 import type { EmblaCarouselType } from "embla-carousel";
+import { getImageUrl } from "@/lib/utils"; // <--- 1. IMPORTAÇÃO
 
 // --- INTERFACES ---
 interface TestimonialItem {
@@ -58,11 +59,6 @@ export function Testimonials({ items, section }: TestimonialsProps) {
     [emblaApi]
   );
 
-  // CORRIGIDO: Usa a variável de ambiente para a imagem de destaque (Rapaz)
-  const bgImageUrl = section.image.startsWith("http") 
-    ? section.image 
-    : `${process.env.NEXT_PUBLIC_API_URL}${section.image}`;
-
   return (
     <section className="w-full bg-[#E5E5E5] py-20 lg:py-32 overflow-hidden">
       <div className="mx-auto max-w-[1216px] px-6">
@@ -73,7 +69,7 @@ export function Testimonials({ items, section }: TestimonialsProps) {
           <div className="relative">
             <div className="relative mx-auto h-[400px] w-full max-w-[489px] overflow-hidden rounded-[20px] lg:h-[571px]">
               <Image 
-                src={bgImageUrl}
+                src={getImageUrl(section.image)} // <--- CORRIGIDO: section.image
                 alt="Depoimentos Competec"
                 fill
                 className="object-cover"
@@ -98,21 +94,16 @@ export function Testimonials({ items, section }: TestimonialsProps) {
               </p>
             </div>
 
-            {/* --- AJUSTE 1: Aumentei a largura do container para 150% e ajustei a margem --- */}
+            {/* --- AJUSTE 1: Aumentei a largura do container --- */}
             <div className="relative z-10 w-full lg:-ml-36 lg:w-[150%]"> 
               
               <div className="overflow-hidden" ref={emblaRef}>
                 <div className="flex gap-6 pb-10 pl-4">
                   {items.map((item) => {
-                     // CORRIGIDO: Usa a variável de ambiente para a foto do cliente (Avatar)
-                     const avatarUrl = item.image.startsWith("http") 
-                        ? item.image 
-                        : `${process.env.NEXT_PUBLIC_API_URL}${item.image}`;
-
                     return (
                       <div 
                         key={item.id} 
-                        // --- AJUSTE 2: Diminuí a largura fixa de 420px para 380px ---
+                        // --- AJUSTE 2: Diminuí a largura fixa ---
                         className="flex-[0_0_90%] min-w-0 sm:flex-[0_0_380px]"
                       >
                         <div className="flex h-full flex-col justify-between rounded-[20px] border border-[#C0C5C8] bg-white p-8 shadow-sm transition-shadow hover:shadow-md h-[275px]">
@@ -129,7 +120,7 @@ export function Testimonials({ items, section }: TestimonialsProps) {
                             <div className="flex items-center gap-4">
                               <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full">
                                 <Image 
-                                  src={avatarUrl}
+                                  src={getImageUrl(item.image)} // <--- CORRIGIDO: item.image
                                   alt={item.name}
                                   fill
                                   className="object-cover"
@@ -159,7 +150,7 @@ export function Testimonials({ items, section }: TestimonialsProps) {
                 </div>
               </div>
 
-              {/* BOLINHAS (Mantidas ajustadas para a esquerda do novo layout) */}
+              {/* BOLINHAS */}
               <div className="mt-4 flex justify-center gap-3 lg:justify-start lg:pl-44">
                 {scrollSnaps.map((_, index) => (
                   <button

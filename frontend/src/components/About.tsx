@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getImageUrl } from "@/lib/utils"; // <--- Importação correta
 import { ArrowRight } from "lucide-react"; 
 
 interface AboutProps {
@@ -13,10 +14,7 @@ interface AboutProps {
 export function About({ data }: AboutProps) {
   if (!data) return null;
 
-  // CORRIGIDO: Usa a variável de ambiente em vez de localhost
-  const imageUrl = data.image.startsWith("http") 
-    ? data.image 
-    : `${process.env.NEXT_PUBLIC_API_URL}${data.image}`;
+  // (Removemos a variável antiga 'imageUrl' daqui porque usamos a função direto lá embaixo)
 
   return (
     <section className="relative w-full bg-[#E5E5E5] py-20 lg:py-32">
@@ -27,7 +25,7 @@ export function About({ data }: AboutProps) {
           {/* 1. A IMAGEM DE FUNDO (Engenheira) */}
           <div className="relative h-[300px] w-full overflow-hidden rounded-[32px] lg:h-[450px] lg:w-[85%]">
             <Image 
-              src={imageUrl} 
+              src={getImageUrl(data.image)}  // <--- AQUI ESTÁ A MÁGICA
               alt="Quem Somos Competec"
               fill
               className="object-cover object-top"

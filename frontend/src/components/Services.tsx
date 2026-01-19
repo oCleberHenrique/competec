@@ -1,6 +1,7 @@
 import Image from "next/image";
-import Link from "next/link"; // <--- Importado
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { getImageUrl } from "@/lib/utils"; // <--- 1. IMPORTAÇÃO ADICIONADA
 
 // Interface para os CARDS (Lista)
 interface ServiceItem {
@@ -25,10 +26,7 @@ interface ServicesProps {
 }
 
 export function Services({ cardData, sectionData }: ServicesProps) {
-  // CORRIGIDO: Usa a variável de ambiente em vez de localhost
-  const imageUrl = sectionData.image.startsWith("http") 
-  ? sectionData.image 
-  : `${process.env.NEXT_PUBLIC_API_URL}${sectionData.image}`;
+  // (Removemos a lógica manual antiga daqui)
 
   return (
     // 1. ADICIONADO id="services" PARA O MENU FUNCIONAR
@@ -80,7 +78,7 @@ export function Services({ cardData, sectionData }: ServicesProps) {
         {/* --- COLUNA DA DIREITA (Imagem Grande) --- */}
         <div className="relative h-[400px] w-full overflow-hidden rounded-[32px] lg:h-full lg:min-h-[600px]">
           <Image 
-            src={imageUrl}
+            src={getImageUrl(sectionData.image)} // <--- 2. USO DA FUNÇÃO AQUI
             alt={sectionData.title}
             fill
             className="object-cover"

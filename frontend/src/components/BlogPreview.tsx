@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Calendar } from "lucide-react";
 import Link from "next/link";
+import { getImageUrl } from "@/lib/utils"; // <--- 1. IMPORTAÇÃO ADICIONADA
 
 interface BlogPost {
   id: number;
@@ -27,7 +28,6 @@ export function BlogPreview({ posts, section }: BlogPreviewProps) {
   if (!posts || posts.length === 0) return null;
 
   return (
-    // 1. ADICIONADO id="blog" PARA O MENU FUNCIONAR
     <section id="blog" className="w-full bg-white py-20 lg:py-32">
       <div className="mx-auto max-w-[1216px] px-6">
         
@@ -58,10 +58,7 @@ export function BlogPreview({ posts, section }: BlogPreviewProps) {
         {/* GRID DE POSTS */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {posts.map((post) => {
-             // CORRIGIDO: Usa a variável de ambiente para montar a URL da imagem do post
-             const imageUrl = post.image.startsWith("http") 
-                ? post.image 
-                : `${process.env.NEXT_PUBLIC_API_URL}${post.image}`;
+            // (Removemos a lógica manual antiga daqui)
 
             return (
               <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
@@ -70,7 +67,7 @@ export function BlogPreview({ posts, section }: BlogPreviewProps) {
                   <div className="relative w-full overflow-hidden rounded-2xl bg-gray-100">
                     <div className="aspect-[280/370] w-full relative"> 
                       <Image
-                        src={imageUrl}
+                        src={getImageUrl(post.image)} // <--- 2. USO DA FUNÇÃO AQUI
                         alt={post.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-105"

@@ -5,6 +5,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useCallback } from "react";
+import { getImageUrl } from "@/lib/utils"; // <--- 1. IMPORTAÇÃO ADICIONADA
 
 interface PartnerItem {
   id: number;
@@ -17,7 +18,7 @@ interface PartnersProps {
 }
 
 export function Partners({ data }: PartnersProps) {
-  // 1. Hooks primeiro (para evitar erro)
+  // 1. Hooks primeiro
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" }, [
     Autoplay({ delay: 3000, stopOnInteraction: false }),
   ]);
@@ -30,7 +31,7 @@ export function Partners({ data }: PartnersProps) {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
-  // 2. Verificação de dados depois
+  // 2. Verificação de dados
   if (!data || data.length === 0) return null;
 
   return (
@@ -61,26 +62,24 @@ export function Partners({ data }: PartnersProps) {
 
           {/* O CARROSSEL EM SI */}
           <div className="overflow-hidden w-full" ref={emblaRef}>
-            <div className="flex items-center"> {/* Adicionei items-center para alinhar verticalmente */}
+            <div className="flex items-center">
               {data.map((item) => {
-                 // CORRIGIDO: Usa a variável de ambiente para montar a URL do logo
-                 const imageUrl = item.logo.startsWith("http") 
-                 ? item.logo 
-                 : `${process.env.NEXT_PUBLIC_API_URL}${item.logo}`;
+                 
+                 // --- MUDANÇA AQUI: Usando a função helper ---
+                 const imageUrl = getImageUrl(item.logo);
 
                 return (
                   <div
                     key={item.id}
                     className="flex min-w-0 flex-[0_0_50%] items-center justify-center px-4 md:flex-[0_0_33.33%] lg:flex-[0_0_20%]"
                   >
-                    {/* --- AQUI ESTÁ O AJUSTE DE TAMANHO --- */}
                     {/* Mobile: h-28 (112px) | Desktop: h-40 (160px) w-40 (160px) */}
                     <div className="relative h-28 w-32 lg:h-40 lg:w-40 grayscale transition-all duration-300 hover:grayscale-0">
                       <Image
                         src={imageUrl}
                         alt={item.name}
                         fill
-                        className="object-contain" // Garante que o logo caiba inteiro no quadrado de 160px
+                        className="object-contain"
                         unoptimized
                       />
                     </div>

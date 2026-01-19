@@ -5,25 +5,31 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react"; 
+import { getImageUrl } from "@/lib/utils"; // <--- 1. IMPORTAÇÃO
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [latestInfoSlug, setLatestInfoSlug] = useState<string | null>(null);
+  const [logo, setLogo] = useState<string | null>(null); // <--- 2. ESTADO PARA O LOGO
 
-  // --- 1. BUSCA O SLUG DO BANCO DE DADOS ---
+  // --- 1. BUSCA DADOS DA NAVBAR (SLUG E LOGO) ---
   useEffect(() => {
-    // CORRIGIDO: Usa a variável de ambiente para buscar os dados do menu
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/navbar-data/`)
       .then((res) => res.json())
       .then((data) => {
+        // Pega o Slug da página de informações
         if (data.latest_info_slug) {
           setLatestInfoSlug(data.latest_info_slug);
         }
+        // Pega o Logo vindo do Backend (se existir)
+        if (data.logo) {
+            setLogo(data.logo);
+        }
       })
-      .catch((err) => console.error("Erro ao buscar link do menu:", err));
+      .catch((err) => console.error("Erro ao buscar dados do menu:", err));
   }, []);
 
-  // --- 2. LISTA DE ITENS (Agora Dinâmica) ---
+  // --- 2. LISTA DE ITENS ---
   const menuItems = [
     { label: "HOME", href: "/" },
     { label: "QUEM SOMOS", href: "/quem-somos" },
@@ -31,7 +37,6 @@ export function Navbar() {
     { label: "BLOG", href: "/#blog" },
   ];
 
-  // Adiciona "INFORMAÇÕES" apenas se existir uma página cadastrada
   if (latestInfoSlug) {
     menuItems.push({ label: "INFORMAÇÕES", href: `/informacoes/${latestInfoSlug}` });
   }
@@ -44,16 +49,24 @@ export function Navbar() {
           style={{ backgroundColor: "#2C3E50" }}
         >
           {/* 1. LOGO */}
-          {/* Obs: Certifique-se de que o arquivo 'logo-cliente.svg' existe na pasta 'public' do frontend */}
           <Link href="/" className="relative flex items-center h-full group">
               <div className="relative h-12 w-40 transition-opacity group-hover:opacity-90">
-                  <Image 
-                      src="/logo-cliente.svg" 
-                      alt="Logo Competec"
-                      fill
-                      className="object-contain object-left"
-                      priority
-                  />
+                  {/* Se tiver logo da API, usa ele. Se não, tenta o local. */}
+                  {logo ? (
+                      <Image 
+                        src={getImageUrl(logo)} 
+                        alt="Logo Competec"
+                        fill
+                        className="object-contain object-left"
+                        priority
+                        unoptimized
+                      />
+                  ) : (
+                      // Fallback enquanto carrega ou se não tiver API
+                      <span className="text-white font-bold text-xl flex items-center h-full">
+                        COMPETEC
+                      </span>
+                  )}
               </div>
           </Link>
 
@@ -87,7 +100,7 @@ export function Navbar() {
         </nav>
       </div>
 
-      {/* 4. MENU MOBILE DROPDOWN (Aparece ao clicar no hamburger) */}
+      {/* 4. MENU MOBILE DROPDOWN */}
       {isOpen && (
         <div className="fixed top-[110px] left-4 right-4 z-40 rounded-xl bg-white p-6 shadow-2xl md:hidden animate-in slide-in-from-top-5 border border-gray-200">
           <div className="flex flex-col gap-4">
