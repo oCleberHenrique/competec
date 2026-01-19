@@ -37,7 +37,7 @@ interface HomeData {
     order: number;
   }>;
 
-  // AQUI ESTÁ A CORREÇÃO: O campo slug é OBRIGATÓRIO agora
+  // CORREÇÃO 1: O slug continua aqui (não remova!)
   services: Array<{
     id: number;
     title: string;
@@ -111,6 +111,7 @@ interface HomeData {
     facebook: string;
     instagram: string;
     youtube: string;
+    linkedin: string; // <--- CORREÇÃO 2: ADICIONADO AQUI!
     copyright_text: string;
   } | null;
 }
@@ -145,7 +146,7 @@ export default function HomePage() {
     );
   }
 
-  // Se não houver dados, não renderiza nada para evitar erros
+  // Se não houver dados, não renderiza nada
   if (!data) return null;
 
   return (
@@ -159,8 +160,6 @@ export default function HomePage() {
         {data.differentiators && <Differentiators data={data.differentiators} />}
       </div>
 
-      {/* AQUI É ONDE O ERRO ACONTECIA */}
-      {/* O Typescript agora sabe que data.services TEM slug, porque definimos na interface lá em cima */}
       {data.services && data.services_section && (
         <Services 
           cardData={data.services} 
