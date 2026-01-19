@@ -13,8 +13,7 @@ import { BlogPreview } from "@/components/BlogPreview";
 import { Footer } from "@/components/Footer";
 import { Loader2 } from "lucide-react";
 
-
-// --- INTERFACE DE DADOS (Espelho da API do Django) ---
+// --- INTERFACE DE DADOS ---
 interface HomeData {
   hero: {
     title: string;
@@ -38,10 +37,11 @@ interface HomeData {
     order: number;
   }>;
 
+  // AQUI ESTÁ A CORREÇÃO: O campo slug é OBRIGATÓRIO agora
   services: Array<{
     id: number;
     title: string;
-    slug: string; // <--- AQUI ESTÁ A CORREÇÃO
+    slug: string; 
     description: string;
     icon: string | null;
     order: number;
@@ -60,7 +60,6 @@ interface HomeData {
     footer_text: string;
     image: string;
   } | null;
-
 
   testimonials: Array<{
     id: number;
@@ -123,7 +122,6 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // CORRIGIDO: Aponta para o endpoint da API usando variável de ambiente
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/home/`, {
             cache: 'no-store'
         });
@@ -147,47 +145,45 @@ export default function HomePage() {
     );
   }
 
+  // Se não houver dados, não renderiza nada para evitar erros
+  if (!data) return null;
+
   return (
     <main className="min-h-screen bg-white pb-0">
       <Navbar />
       
-      {/* 1. Hero Section */}
-      {data?.hero && <Hero data={data.hero} />}
+      {data.hero && <Hero data={data.hero} />}
       
-      {/* 2. Bloco Cinza (Quem Somos + Diferenciais) */}
       <div className="bg-[#E5E5E5]">
-        {data?.about && <About data={data.about} />}
-        {data?.differentiators && <Differentiators data={data.differentiators} />}
+        {data.about && <About data={data.about} />}
+        {data.differentiators && <Differentiators data={data.differentiators} />}
       </div>
 
-      {/* 3. Serviços (Capa + Cards) */}
-      {data?.services && data?.services_section && (
+      {/* AQUI É ONDE O ERRO ACONTECIA */}
+      {/* O Typescript agora sabe que data.services TEM slug, porque definimos na interface lá em cima */}
+      {data.services && data.services_section && (
         <Services 
           cardData={data.services} 
           sectionData={data.services_section} 
         />
       )}
 
-      {/* 4. História (Quem é a Competec - Fundo Escuro) */}
-      {data?.history && <History data={data.history} />}
+      {data.history && <History data={data.history} />}
 
-      {/* 5. Depoimentos (Rapaz + Carrossel de Reviews) */}
-      {data?.testimonials && data?.testimonials_section && (
+      {data.testimonials && data.testimonials_section && (
         <Testimonials 
             items={data.testimonials} 
             section={data.testimonials_section} 
         />
       )}
 
-      {/* 6. Parceiros (Carrossel de Logos) */}
-      {data?.partners && <Partners data={data.partners} />}
+      {data.partners && <Partners data={data.partners} />}
 
-      {/* --- BLOG --- */}
-      {data?.blog_section && data?.blog_posts && (
+      {data.blog_section && data.blog_posts && (
         <BlogPreview posts={data.blog_posts} section={data.blog_section} />
       )}
-{/* --- RODAPÉ --- */}
-      {data?.footer && <Footer data={data.footer} />}
+
+      {data.footer && <Footer data={data.footer} />}
     </main>
   );
 }
