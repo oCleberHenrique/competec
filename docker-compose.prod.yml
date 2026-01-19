@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   backend:
     build:
@@ -23,6 +25,18 @@ services:
       - POSTGRES_DB=competec
       - POSTGRES_USER=competec_user
       - POSTGRES_PASSWORD=hD80D9jLUhu6gJzgwuEefwABJuHiWt49N
+    restart: always
+
+ 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+ 
+    environment:
+      - NEXT_PUBLIC_API_URL=https://api.v4jasson.com.br
+    ports:
+      - "3000:3000"
     restart: always
 
 volumes:
