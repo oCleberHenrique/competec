@@ -38,9 +38,11 @@ interface HomeData {
     order: number;
   }>;
 
+  // CORRIGIDO AQUI: Adicionei o campo 'slug'
   services: Array<{
     id: number;
     title: string;
+    slug: string; // <--- O erro estava aqui (faltava essa linha)
     description: string;
     icon: string | null;
     order: number;
@@ -123,7 +125,7 @@ export default function HomePage() {
     async function fetchData() {
       try {
         // O parametro '?t=' evita cache do navegador durante desenvolvimento
-        // CORRIGIDO: Aponta para o endpoint da API, não para uma imagem
+        // CORRIGIDO: Aponta para o endpoint da API
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/home/`, {
             cache: 'no-store'
         });
