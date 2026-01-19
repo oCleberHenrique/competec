@@ -306,4 +306,10 @@ CKEDITOR_CONFIGS = {
     }
 }
 
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://api.v4jasson.com.br",
+    "https://competec.v4jasson.com.br",
+]
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
