@@ -63,9 +63,10 @@ export function Partners({ data }: PartnersProps) {
           <div className="overflow-hidden w-full" ref={emblaRef}>
             <div className="flex items-center"> {/* Adicionei items-center para alinhar verticalmente */}
               {data.map((item) => {
+                 // CORRIGIDO: Usa a variável de ambiente para montar a URL do logo
                  const imageUrl = item.logo.startsWith("http") 
                  ? item.logo 
-                 : `http://localhost:8000${item.logo}`;
+                 : `${process.env.NEXT_PUBLIC_API_URL}${item.logo}`;
 
                 return (
                   <div

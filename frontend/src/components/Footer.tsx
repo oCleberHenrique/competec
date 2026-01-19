@@ -50,7 +50,10 @@ interface FooterProps {
 export function Footer({ data }: FooterProps) {
   if (!data) return null;
 
-  const logoUrl = data.logo.startsWith("http") ? data.logo : `http://localhost:8000${data.logo}`;
+  // CORRIGIDO: Usa a variável de ambiente para a logo do rodapé
+  const logoUrl = data.logo.startsWith("http") 
+    ? data.logo 
+    : `${process.env.NEXT_PUBLIC_API_URL}${data.logo}`;
 
   return (
     <footer className="w-full bg-[#2C3E50] text-white">

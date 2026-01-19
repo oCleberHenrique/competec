@@ -58,7 +58,10 @@ export function BlogPreview({ posts, section }: BlogPreviewProps) {
         {/* GRID DE POSTS */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {posts.map((post) => {
-             const imageUrl = post.image.startsWith("http") ? post.image : `http://localhost:8000${post.image}`;
+             // CORRIGIDO: Usa a variável de ambiente para montar a URL da imagem do post
+             const imageUrl = post.image.startsWith("http") 
+                ? post.image 
+                : `${process.env.NEXT_PUBLIC_API_URL}${post.image}`;
 
             return (
               <Link key={post.id} href={`/blog/${post.slug}`} className="group block">

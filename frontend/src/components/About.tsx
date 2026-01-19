@@ -13,9 +13,10 @@ interface AboutProps {
 export function About({ data }: AboutProps) {
   if (!data) return null;
 
+  // CORRIGIDO: Usa a variável de ambiente em vez de localhost
   const imageUrl = data.image.startsWith("http") 
     ? data.image 
-    : `http://localhost:8000${data.image}`;
+    : `${process.env.NEXT_PUBLIC_API_URL}${data.image}`;
 
   return (
     <section className="relative w-full bg-[#E5E5E5] py-20 lg:py-32">

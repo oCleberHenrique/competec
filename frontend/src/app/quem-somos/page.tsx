@@ -76,7 +76,10 @@ export default function AboutPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch(`http://localhost:8000/api/about-page/?t=${Date.now()}`, { cache: 'no-store' });
+        // CORRIGIDO: Usa a variável de ambiente para a API
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/about-page/?t=${Date.now()}`, { 
+            cache: 'no-store' 
+        });
         const json = await res.json();
         setData(json);
       } catch (error) {
@@ -100,9 +103,10 @@ export default function AboutPage() {
 
   const { about } = data;
   
+  // CORRIGIDO: Função auxiliar agora usa a variável de ambiente para montar URLs de imagem
   const getFullUrl = (path: string | null) => {
     if (!path) return ""; 
-    return path.startsWith("http") ? path : `http://localhost:8000${path}`;
+    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL}${path}`;
   };
 
   // Lógica da Imagem Principal: Tenta a Interna, se não tiver, usa a da Home

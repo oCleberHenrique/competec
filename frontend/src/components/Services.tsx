@@ -6,7 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 interface ServiceItem {
   id: number;
   title: string;
-  slug: string; // <--- Adicionado para o link funcionar
+  slug: string; 
   description: string;
   icon: string | null;
   order: number;
@@ -14,9 +14,9 @@ interface ServiceItem {
 
 // Interface para a CAPA DA SEÇÃO
 interface SectionData {
-    heading: string;
-    title: string;
-    image: string;
+   heading: string;
+   title: string;
+   image: string;
 }
 
 interface ServicesProps {
@@ -25,9 +25,10 @@ interface ServicesProps {
 }
 
 export function Services({ cardData, sectionData }: ServicesProps) {
+  // CORRIGIDO: Usa a variável de ambiente em vez de localhost
   const imageUrl = sectionData.image.startsWith("http") 
   ? sectionData.image 
-  : `http://localhost:8000${sectionData.image}`;
+  : `${process.env.NEXT_PUBLIC_API_URL}${sectionData.image}`;
 
   return (
     // 1. ADICIONADO id="services" PARA O MENU FUNCIONAR

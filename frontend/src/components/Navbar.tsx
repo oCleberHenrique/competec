@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react"; // Ícones prontos (opcional, ou use seu SVG)
+import { Menu, X } from "lucide-react"; 
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +12,8 @@ export function Navbar() {
 
   // --- 1. BUSCA O SLUG DO BANCO DE DADOS ---
   useEffect(() => {
-    fetch("http://localhost:8000/api/navbar-data/")
+    // CORRIGIDO: Usa a variável de ambiente para buscar os dados do menu
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/navbar-data/`)
       .then((res) => res.json())
       .then((data) => {
         if (data.latest_info_slug) {
@@ -25,7 +26,7 @@ export function Navbar() {
   // --- 2. LISTA DE ITENS (Agora Dinâmica) ---
   const menuItems = [
     { label: "HOME", href: "/" },
-    { label: "QUEM SOMOS", href: "/quem-somos" }, // Verifique se essa página existe, senão use "/#about"
+    { label: "QUEM SOMOS", href: "/quem-somos" },
     { label: "SOLUÇÕES", href: "/#services" },
     { label: "BLOG", href: "/#blog" },
   ];
@@ -43,10 +44,11 @@ export function Navbar() {
           style={{ backgroundColor: "#2C3E50" }}
         >
           {/* 1. LOGO */}
+          {/* Obs: Certifique-se de que o arquivo 'logo-cliente.svg' existe na pasta 'public' do frontend */}
           <Link href="/" className="relative flex items-center h-full group">
               <div className="relative h-12 w-40 transition-opacity group-hover:opacity-90">
                   <Image 
-                      src="/logo-cliente.svg" // Garanta que este arquivo existe em /public
+                      src="/logo-cliente.svg" 
                       alt="Logo Competec"
                       fill
                       className="object-contain object-left"

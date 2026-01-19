@@ -223,7 +223,7 @@ UNFOLD = {
                 ],
             },
 
-            # --- BLOCO 3: INFORMAÇÕES (NOVO) ---
+            # --- BLOCO 3: INFORMAÇÕES ---
             {
                 "title": _("Informações"),
                 "separator": True,

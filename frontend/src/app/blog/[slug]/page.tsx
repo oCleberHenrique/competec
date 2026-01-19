@@ -18,7 +18,10 @@ export default function BlogPostPage() {
     async function fetchData() {
       if (!slug) return;
       try {
-        const res = await fetch(`http://localhost:8000/api/blog-post/${slug}/?t=${Date.now()}`, { cache: 'no-store' });
+        // CORRIGIDO: Usa a variável de ambiente para a API
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog-post/${slug}/?t=${Date.now()}`, { 
+            cache: 'no-store' 
+        });
         if (!res.ok) throw new Error("Post não encontrado");
         const json = await res.json();
         setData(json);
@@ -35,7 +38,11 @@ export default function BlogPostPage() {
   if (!data) return null;
 
   const { post, footer } = data;
-  const imageUrl = post.image?.startsWith("http") ? post.image : `http://localhost:8000${post.image}`;
+  
+  // CORRIGIDO: Monta a URL da imagem usando a variável de ambiente
+  const imageUrl = post.image?.startsWith("http") 
+    ? post.image 
+    : `${process.env.NEXT_PUBLIC_API_URL}${post.image}`;
 
   return (
     <main className="min-h-screen bg-white">

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Loader2, Phone, Mail, MapPin, ChevronRight, Menu, CheckCircle2 } from "lucide-react";
+import { Loader2, MapPin, ChevronRight, Menu, CheckCircle2 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
@@ -47,7 +47,10 @@ export default function InformationPage() {
     async function fetchData() {
       if (!slug) return;
       try {
-        const res = await fetch(`http://localhost:8000/api/information/${slug}/?t=${Date.now()}`, { cache: 'no-store' });
+        // CORRIGIDO: Usa a variável de ambiente para buscar os dados
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/information/${slug}/?t=${Date.now()}`, { 
+            cache: 'no-store' 
+        });
         
         if (!res.ok) {
             console.error("Erro 404 ou API Offline");
@@ -77,14 +80,15 @@ export default function InformationPage() {
 
   const { page, sidebar_links, footer } = data;
 
+  // CORRIGIDO: Função auxiliar para montar URLs de imagem corretamente
   const getUrl = (path: string) => {
     if (!path) return null;
-    return path.startsWith("http") ? path : `http://localhost:8000${path}`;
+    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL}${path}`;
   };
 
   const bannerUrl = getUrl(page.banner);
 
-  // --- LÓGICA DE SEPARAÇÃO (Melhorada) ---
+  // --- LÓGICA DE SEPARAÇÃO ---
   // Aceita vírgula (,) ou ponto e vírgula (;) ou quebra de linha (\n)
   const cityList = page.regions_content 
     ? page.regions_content.split(/[,;\n]+/).map(city => city.trim()).filter(city => city !== "") 
@@ -124,6 +128,7 @@ export default function InformationPage() {
                             className="relative h-24 w-full cursor-pointer overflow-hidden rounded-lg border-2 border-transparent hover:border-[#E65100] transition-all group"
                             onClick={() => setSelectedImage(getUrl(item.image))}
                         >
+                            {/* O '!' no getUrl(item.image)! diz ao TypeScript que temos certeza que não é null aqui */}
                             <Image src={getUrl(item.image)!} alt="Galeria" fill className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized />
                         </div>
                     ))}
@@ -139,15 +144,13 @@ export default function InformationPage() {
             </div>
 
             {/* --- LISTA DE CIDADES (TOGGLES) --- */}
-            {/* Se a lista existir, renderiza o bloco */}
-            {cityList.length > 0 ? (
+            {cityList.length > 0 && (
                 <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
                     <h3 className="text-xl font-bold text-[#2C3E50] mb-6 border-b pb-4 flex items-center gap-2">
                         <MapPin className="text-[#E65100]" />
                         Regiões de Atendimento
                     </h3>
                     
-                    {/* CONTAINER FLEX WRAP: Isso garante que virem botões um ao lado do outro */}
                     <div className="flex flex-wrap gap-3">
                         {cityList.map((city, index) => (
                             <div 
@@ -160,13 +163,6 @@ export default function InformationPage() {
                         ))}
                     </div>
                 </div>
-            ) : (
-               // Debug: Se não aparecer nada, mostra isso (só pra teste)
-               page.regions_content && (
-                   <div className="p-4 bg-yellow-100 text-yellow-800 rounded">
-                       O campo regiões tem texto, mas não consegui separar. Texto recebido: {page.regions_content}
-                   </div>
-               )
             )}
           </div>
 
@@ -205,12 +201,12 @@ export default function InformationPage() {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal de Zoom da Galeria */}
       {selectedImage && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 backdrop-blur-sm" onClick={() => setSelectedImage(null)}>
             <div className="relative max-w-5xl w-full h-auto max-h-[90vh]">
                 <Image src={selectedImage} alt="Zoom" width={1200} height={800} className="object-contain w-full h-full rounded-md shadow-2xl" unoptimized />
-                <button className="absolute -top-10 right-0 text-white font-bold">FECHAR X</button>
+                <button className="absolute -top-10 right-0 text-white font-bold text-xl p-2">FECHAR X</button>
             </div>
         </div>
       )}

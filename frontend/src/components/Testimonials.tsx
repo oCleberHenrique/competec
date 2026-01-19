@@ -58,7 +58,10 @@ export function Testimonials({ items, section }: TestimonialsProps) {
     [emblaApi]
   );
 
-  const bgImageUrl = section.image.startsWith("http") ? section.image : `http://localhost:8000${section.image}`;
+  // CORRIGIDO: Usa a variável de ambiente para a imagem de destaque (Rapaz)
+  const bgImageUrl = section.image.startsWith("http") 
+    ? section.image 
+    : `${process.env.NEXT_PUBLIC_API_URL}${section.image}`;
 
   return (
     <section className="w-full bg-[#E5E5E5] py-20 lg:py-32 overflow-hidden">
@@ -101,7 +104,10 @@ export function Testimonials({ items, section }: TestimonialsProps) {
               <div className="overflow-hidden" ref={emblaRef}>
                 <div className="flex gap-6 pb-10 pl-4">
                   {items.map((item) => {
-                     const avatarUrl = item.image.startsWith("http") ? item.image : `http://localhost:8000${item.image}`;
+                     // CORRIGIDO: Usa a variável de ambiente para a foto do cliente (Avatar)
+                     const avatarUrl = item.image.startsWith("http") 
+                        ? item.image 
+                        : `${process.env.NEXT_PUBLIC_API_URL}${item.image}`;
 
                     return (
                       <div 

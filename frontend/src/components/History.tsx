@@ -15,9 +15,10 @@ interface HistoryProps {
 export function History({ data }: HistoryProps) {
   if (!data) return null;
 
+  // CORRIGIDO: Usa a variável de ambiente em vez de localhost
   const imageUrl = data.image.startsWith("http") 
     ? data.image 
-    : `http://localhost:8000${data.image}`;
+    : `${process.env.NEXT_PUBLIC_API_URL}${data.image}`;
 
   // --- FUNÇÃO PARA FORMATAR O TÍTULO ---
   // Procura a palavra "Competec", quebra a linha antes e pinta de laranja

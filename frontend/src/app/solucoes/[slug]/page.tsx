@@ -35,7 +35,10 @@ export default function ServiceInternalPage() {
     async function fetchData() {
       if (!slug) return;
       try {
-        const res = await fetch(`http://localhost:8000/api/service/${slug}/?t=${Date.now()}`, { cache: 'no-store' });
+        // CORRIGIDO: Usa a variável de ambiente para buscar o serviço
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/service/${slug}/?t=${Date.now()}`, { 
+            cache: 'no-store' 
+        });
         if (!res.ok) throw new Error("Serviço não encontrado");
         const json = await res.json();
         setData(json);
@@ -56,8 +59,9 @@ export default function ServiceInternalPage() {
 
   // LÓGICA SEGURA DE IMAGEM:
   // Só cria a URL se internal_image existir. Se não, fica null.
+  // CORRIGIDO: Usa a variável de ambiente para montar a URL da imagem
   const imageUrl = service.internal_image 
-    ? (service.internal_image.startsWith("http") ? service.internal_image : `http://localhost:8000${service.internal_image}`)
+    ? (service.internal_image.startsWith("http") ? service.internal_image : `${process.env.NEXT_PUBLIC_API_URL}${service.internal_image}`)
     : null;
 
   return (

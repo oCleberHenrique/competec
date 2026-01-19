@@ -123,7 +123,8 @@ export default function HomePage() {
     async function fetchData() {
       try {
         // O parametro '?t=' evita cache do navegador durante desenvolvimento
-        const res = await fetch(`http://localhost:8000/api/home-data/?t=${Date.now()}`, {
+        // CORRIGIDO: Aponta para o endpoint da API, não para uma imagem
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/home/`, {
             cache: 'no-store'
         });
         const json = await res.json();
