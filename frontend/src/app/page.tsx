@@ -123,7 +123,7 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/home/`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/home-data/`, {
             cache: 'no-store'
         });
         const json = await res.json();
