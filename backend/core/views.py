@@ -50,19 +50,19 @@ class HomeDataView(APIView):
             "footer": FooterConfigSerializer(footer_data).data if footer_data else None
         })
 
-# --- 2. QUEM SOMOS (NOVA VIEW - FALTAVA ISSO) ---
+# --- 2. QUEM SOMOS
 class AboutPageView(APIView):
     permission_classes = []
 
     def get(self, request):
-        # 1. Dados da Seção Quem Somos (inclui Galeria e Valores via nested serializer)
+        # 1. Dados da Seção Quem Somos
         about = AboutSection.objects.filter(is_active=True).first()
         about_data = AboutSectionSerializer(about).data if about else {}
 
-        # 2. Linha do Tempo (História) - Aqui pegamos TODOS os itens ordenados por ano
-        history = HistorySection.objects.all().order_by('year') 
-        # Nota: Se HistorySection for apenas um título, use .first(). Se forem eventos, use .all()
-        # Vou assumir que no Home é resumo e aqui é lista completa.
+        # 2. Linha do Tempo (História) - CORREÇÃO AQUI
+        # Removemos o .order_by('year') pois o campo não existe no seu banco.
+        # Vamos pegar tudo que estiver ativo.
+        history = HistorySection.objects.filter(is_active=True)
         history_data = HistorySectionSerializer(history, many=True).data
 
         # 3. Diferenciais
