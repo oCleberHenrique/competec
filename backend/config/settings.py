@@ -281,6 +281,13 @@ UNFOLD = {
                 "title": _("Configurações Gerais"),
                 "separator": True,
                 "items": [
+                    # --- AQUI ESTÁ O NOVO ITEM QUE FALTAVA ---
+                    {
+                        "title": _("Navbar & Logo"),
+                        "icon": "web", # Mudei para 'web' para diferenciar
+                        "link": reverse_lazy("admin:core_navbarconfig_changelist"),
+                    },
+                    # -----------------------------------------
                     {
                         "title": _("Rodapé & Contatos"),
                         "icon": "layers",
