@@ -50,12 +50,46 @@ class HomeDataView(APIView):
             "footer": FooterConfigSerializer(footer_data).data if footer_data else None
         })
 
-# --- 2. DETALHE DO SERVIÇO (Essa estava faltando!) ---
+# --- 2. QUEM SOMOS (NOVA VIEW - FALTAVA ISSO) ---
+class AboutPageView(APIView):
+    permission_classes = []
+
+    def get(self, request):
+        # 1. Dados da Seção Quem Somos (inclui Galeria e Valores via nested serializer)
+        about = AboutSection.objects.filter(is_active=True).first()
+        about_data = AboutSectionSerializer(about).data if about else {}
+
+        # 2. Linha do Tempo (História) - Aqui pegamos TODOS os itens ordenados por ano
+        history = HistorySection.objects.all().order_by('year') 
+        # Nota: Se HistorySection for apenas um título, use .first(). Se forem eventos, use .all()
+        # Vou assumir que no Home é resumo e aqui é lista completa.
+        history_data = HistorySectionSerializer(history, many=True).data
+
+        # 3. Diferenciais
+        differentiators = Differentiator.objects.all().order_by('order')
+        diff_data = DifferentiatorSerializer(differentiators, many=True).data
+
+        # 4. Parceiros
+        partners = Partner.objects.all().order_by('order')
+        partners_data = PartnerSerializer(partners, many=True).data
+        
+        # 5. Footer
+        footer = FooterConfig.objects.first()
+        footer_data = FooterConfigSerializer(footer).data if footer else {}
+
+        return Response({
+            "about": about_data,
+            "history": history_data,
+            "differentiators": diff_data,
+            "partners": partners_data,
+            "footer": footer_data
+        })
+
+# --- 3. DETALHE DO SERVIÇO ---
 class ServiceDetailView(APIView):
     permission_classes = []
 
     def get(self, request, slug):
-        # Busca o serviço pelo Slug na URL
         service = get_object_or_404(Service, slug=slug)
         footer_data = FooterConfig.objects.first()
 
@@ -64,7 +98,7 @@ class ServiceDetailView(APIView):
             "footer": FooterConfigSerializer(footer_data).data if footer_data else None
         })
 
-# --- 3. DETALHE DO BLOG ---
+# --- 4. DETALHE DO BLOG ---
 class BlogPostDetailView(APIView):
     permission_classes = []
 
@@ -77,6 +111,7 @@ class BlogPostDetailView(APIView):
             "footer": FooterConfigSerializer(footer_data).data if footer_data else None
         })
     
+# --- 5. DETALHE DA PÁGINA DE INFORMAÇÃO ---
 class InformationDetailView(APIView):
     permission_classes = []
 
@@ -84,7 +119,6 @@ class InformationDetailView(APIView):
         page = get_object_or_404(InformationPage, slug=slug)
         footer_data = FooterConfig.objects.first()
         
-        # Vamos pegar a lista de outras páginas para fazer o menu lateral
         sidebar_links = InformationPage.objects.filter(is_active=True).values('title', 'slug')
 
         return Response({
@@ -92,28 +126,22 @@ class InformationDetailView(APIView):
             "sidebar_links": sidebar_links,
             "footer": FooterConfigSerializer(footer_data).data if footer_data else None
         })
-    
+
+# --- 6. NAVBAR & GLOBAL CONFIG ---
 class NavbarDataView(APIView):
     permission_classes = []
-    def get(self, request):
-        latest_info = InformationPage.objects.filter(is_active=True).order_by('-id').first()
-        
-        return Response({
-            "latest_info_slug": latest_info.slug if latest_info else None
-        })
     
-class NavbarDataView(APIView):
     def get(self, request):
         # 1. Pega as configurações gerais (Logo, etc)
         config = NavbarConfig.objects.first()
         config_data = NavbarConfigSerializer(config).data if config else {}
 
-        # 2. Lógica para pegar o último post de informação (já existia)
-        latest_info = InformationPage.objects.order_by('-id').first()
+        # 2. Lógica para pegar o último post de informação
+        latest_info = InformationPage.objects.filter(is_active=True).order_by('-id').first()
         
         # 3. Mescla os dados
         response_data = {
-            **config_data, # Espalha os dados do serializer (incluindo a logo)
+            **config_data, 
             "latest_info_slug": latest_info.slug if latest_info else None
         }
         

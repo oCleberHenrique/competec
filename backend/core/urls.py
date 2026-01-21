@@ -1,11 +1,19 @@
 from django.urls import path
-from .views import HomeDataView, InformationDetailView, NavbarDataView, ServiceDetailView, BlogPostDetailView
+# ADICIONEI AboutPageView AQUI NOS IMPORTS
+from .views import (
+    HomeDataView, InformationDetailView, NavbarDataView, 
+    ServiceDetailView, BlogPostDetailView, AboutPageView
+)
 
 urlpatterns = [
     # API da Home Page
     path("home-data/", HomeDataView.as_view(), name="home-data"),
     
-    # API da Página Interna de Serviço (Onde estava dando erro 404/Branco)
+    # --- NOVA ROTA DO QUEM SOMOS (FALTAVA ISSO) ---
+    path("about-page/", AboutPageView.as_view(), name="about-page"),
+    # ----------------------------------------------
+
+    # API da Página Interna de Serviço
     path("service/<slug:slug>/", ServiceDetailView.as_view(), name="service-detail"),
     
     # API da Página Interna de Blog
