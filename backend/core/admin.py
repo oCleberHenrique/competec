@@ -7,7 +7,8 @@ from unfold.admin import ModelAdmin, TabularInline  # <--- O TabularInline estav
 from .models import (
     HeroSection, 
     AboutSection, AboutGalleryImage, AboutValueCard,
-    Differentiator, 
+    Differentiator,
+    NavbarConfig, 
     Service, ServiceGalleryImage, ServicesSection, 
     HistorySection, 
     Partner, 
@@ -117,3 +118,13 @@ class InformationPageAdmin(ModelAdmin):
     list_display = ["title", "slug", "is_active"]
     prepopulated_fields = {"slug": ("title",)}
     inlines = [InfoGalleryInline]
+
+@admin.register(NavbarConfig)
+class NavbarConfigAdmin(admin.ModelAdmin):
+    list_display = ('id', 'alt_text')
+    
+    # Isso impede que criem mais de uma configuração (Trava para ter apenas 1 logo)
+    def has_add_permission(self, request):
+        if self.model.objects.exists():
+            return False
+        return super().has_add_permission(request)

@@ -289,3 +289,19 @@ class InformationGalleryImage(models.Model):
         verbose_name = "Imagem da Galeria"
         verbose_name_plural = "Galeria desta Página"
         ordering = ["order"]
+
+class NavbarConfig(models.Model):
+    logo = models.ImageField(upload_to='navbar/', verbose_name="Logo do Site")
+    alt_text = models.CharField(max_length=255, default="Competec", verbose_name="Texto Alternativo (Alt)")
+    
+    # Redes Sociais (Opcional, mas bom ter)
+    facebook_link = models.URLField(blank=True, null=True, verbose_name="Facebook")
+    instagram_link = models.URLField(blank=True, null=True, verbose_name="Instagram")
+    linkedin_link = models.URLField(blank=True, null=True, verbose_name="LinkedIn")
+
+    class Meta:
+        verbose_name = "Configuração do Navbar (Logo)"
+        verbose_name_plural = "Configuração do Navbar (Logo)"
+
+    def __str__(self):
+        return "Configuração Principal do Navbar"
