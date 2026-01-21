@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import BlogSection, FooterConfig, AboutGalleryImage, AboutValueCard, HeroSection, AboutSection, Differentiator, HistorySection, InformationGalleryImage, InformationPage, Partner, Service, ServicesSection, Testimonial, TestimonialsSection, BlogPost
+from .models import (
+    BlogSection, FooterConfig, AboutGalleryImage, AboutValueCard, 
+    HeroSection, AboutSection, Differentiator, HistorySection, 
+    InformationGalleryImage, InformationPage, Partner, Service, 
+    ServicesSection, Testimonial, TestimonialsSection, BlogPost, NavbarConfig
+)
 
 class HeroSectionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -100,3 +105,9 @@ class InformationPageSerializer(serializers.ModelSerializer):
             "intro_text", "regions_content", 
             "cta_title", "cta_link", "gallery"
         ]
+
+
+class NavbarConfigSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NavbarConfig
+        fields = '__all__'

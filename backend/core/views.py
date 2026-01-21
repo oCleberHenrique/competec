@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from .models import (
     BlogPost, BlogSection, Differentiator, FooterConfig, HeroSection, 
     AboutSection, HistorySection, InformationPage, Partner, Service, ServicesSection, 
-    TestimonialsSection, Testimonial
+    TestimonialsSection, Testimonial, NavbarConfig
 )
 
 # Imports dos Serializers
@@ -14,7 +14,7 @@ from .serializers import (
     BlogPostSerializer, BlogSectionSerializer, FooterConfigSerializer, 
     HeroSectionSerializer, AboutSectionSerializer, DifferentiatorSerializer, 
     HistorySectionSerializer, InformationPageSerializer, PartnerSerializer, ServiceSerializer, 
-    ServicesSectionSerializer, TestimonialSerializer, TestimonialsSectionSerializer
+    ServicesSectionSerializer, TestimonialSerializer, TestimonialsSectionSerializer, NavbarConfigSerializer
 )
 
 # --- 1. HOME ---
@@ -101,3 +101,20 @@ class NavbarDataView(APIView):
         return Response({
             "latest_info_slug": latest_info.slug if latest_info else None
         })
+    
+class NavbarDataView(APIView):
+    def get(self, request):
+        # 1. Pega as configurações gerais (Logo, etc)
+        config = NavbarConfig.objects.first()
+        config_data = NavbarConfigSerializer(config).data if config else {}
+
+        # 2. Lógica para pegar o último post de informação (já existia)
+        latest_info = InformationPage.objects.order_by('-id').first()
+        
+        # 3. Mescla os dados
+        response_data = {
+            **config_data, # Espalha os dados do serializer (incluindo a logo)
+            "latest_info_slug": latest_info.slug if latest_info else None
+        }
+        
+        return Response(response_data)
