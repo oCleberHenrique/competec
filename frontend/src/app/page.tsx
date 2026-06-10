@@ -11,7 +11,7 @@ import { Testimonials } from "@/components/Testimonials";
 import { Partners } from "@/components/Partners";
 import { BlogPreview } from "@/components/BlogPreview";
 import { Footer } from "@/components/Footer";
-import { Loader2 } from "lucide-react";
+import { getApiUrl } from "@/lib/utils";
 
 // --- INTERFACE DE DADOS ---
 interface HomeData {
@@ -123,7 +123,7 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/home-data/`, {
+        const res = await fetch(`${getApiUrl()}/api/home-data/`, {
             cache: 'no-store'
         });
         const json = await res.json();
@@ -138,13 +138,7 @@ export default function HomePage() {
     fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-white">
-        <Loader2 className="h-10 w-10 animate-spin text-orange-600" />
-      </div>
-    );
-  }
+  if (loading) return null;
 
   // Se não houver dados, não renderiza nada
   if (!data) return null;

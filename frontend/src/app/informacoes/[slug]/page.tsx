@@ -1,12 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ComponentProps } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Loader2, MapPin, ChevronRight, Menu, CheckCircle2 } from "lucide-react";
+import { MapPin, ChevronRight, Menu, CheckCircle2 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { getApiUrl, getImageUrl } from "@/lib/utils";
+
+type FooterData = ComponentProps<typeof Footer>["data"];
 
 // Interfaces
 interface GalleryImage {
@@ -17,8 +21,8 @@ interface GalleryImage {
 interface InfoPageData {
   title: string;
   banner: string;
-  intro_text: string;      
-  regions_content: string; 
+  intro_text: string;
+  regions_content: string;
   cta_title: string;
   cta_link: string;
   gallery: GalleryImage[];
@@ -32,12 +36,12 @@ interface SidebarLink {
 interface ApiResponse {
   page: InfoPageData;
   sidebar_links: SidebarLink[];
-  footer: any;
+  footer: FooterData;
 }
 
 export default function InformationPage() {
   const params = useParams();
-  const slug = params.slug; 
+  const slug = params.slug;
 
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -48,10 +52,10 @@ export default function InformationPage() {
       if (!slug) return;
       try {
         // CORRIGIDO: Usa a variável de ambiente para buscar os dados
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/information/${slug}/?t=${Date.now()}`, { 
-            cache: 'no-store' 
+        const res = await fetch(`${getApiUrl()}/api/information/${slug}/?t=${Date.now()}`, {
+            cache: 'no-store'
         });
-        
+
         if (!res.ok) {
             console.error("Erro 404 ou API Offline");
             setLoading(false);
@@ -68,8 +72,8 @@ export default function InformationPage() {
     fetchData();
   }, [slug]);
 
-  if (loading) return <div className="flex h-screen items-center justify-center bg-white"><Loader2 className="h-10 w-10 animate-spin text-orange-600" /></div>;
-  
+  if (loading) return null;
+
   if (!data) return (
     <div className="flex h-screen flex-col items-center justify-center bg-gray-50 text-gray-500">
         <h1 className="text-4xl font-bold mb-4">404</h1>
@@ -80,18 +84,12 @@ export default function InformationPage() {
 
   const { page, sidebar_links, footer } = data;
 
-  // CORRIGIDO: Função auxiliar para montar URLs de imagem corretamente
-  const getUrl = (path: string) => {
-    if (!path) return null;
-    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL}${path}`;
-  };
-
-  const bannerUrl = getUrl(page.banner);
+  const bannerUrl = getImageUrl(page.banner);
 
   // --- LÓGICA DE SEPARAÇÃO ---
   // Aceita vírgula (,) ou ponto e vírgula (;) ou quebra de linha (\n)
-  const cityList = page.regions_content 
-    ? page.regions_content.split(/[,;\n]+/).map(city => city.trim()).filter(city => city !== "") 
+  const cityList = page.regions_content
+    ? page.regions_content.split(/[,;\n]+/).map(city => city.trim()).filter(city => city !== "")
     : [];
 
   return (
@@ -115,21 +113,20 @@ export default function InformationPage() {
 
       <div className="mx-auto max-w-[1280px] px-6 py-16">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-          
+
           {/* COLUNA ESQUERDA */}
           <div className="lg:col-span-2 space-y-10">
-            
+
             {/* Galeria */}
             {page.gallery && page.gallery.length > 0 && (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {page.gallery.map((item) => (
-                        <div 
-                            key={item.id} 
+                        <div
+                            key={item.id}
                             className="relative h-24 w-full cursor-pointer overflow-hidden rounded-lg border-2 border-transparent hover:border-[#E65100] transition-all group"
-                            onClick={() => setSelectedImage(getUrl(item.image))}
+                            onClick={() => setSelectedImage(getImageUrl(item.image))}
                         >
-                            {/* O '!' no getUrl(item.image)! diz ao TypeScript que temos certeza que não é null aqui */}
-                            <Image src={getUrl(item.image)!} alt="Galeria" fill className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized />
+                            <Image src={getImageUrl(item.image)} alt="Galeria" fill className="object-cover transition-transform duration-500 group-hover:scale-110" unoptimized />
                         </div>
                     ))}
                 </div>
@@ -137,9 +134,9 @@ export default function InformationPage() {
 
             {/* Texto Rico (HTML) */}
             <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-                <div 
+                <div
                     className="prose prose-lg max-w-none text-gray-600 leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: page.intro_text }} 
+                    dangerouslySetInnerHTML={{ __html: page.intro_text }}
                 />
             </div>
 
@@ -150,11 +147,11 @@ export default function InformationPage() {
                         <MapPin className="text-[#E65100]" />
                         Regiões de Atendimento
                     </h3>
-                    
+
                     <div className="flex flex-wrap gap-3">
                         {cityList.map((city, index) => (
-                            <div 
-                                key={index} 
+                            <div
+                                key={index}
                                 className="flex items-center gap-2 bg-white border-2 border-gray-100 pl-3 pr-4 py-2 rounded-full text-sm font-bold text-gray-600 hover:border-[#E65100] hover:text-[#E65100] hover:shadow-md transition-all cursor-default select-none shadow-sm"
                             >
                                 <CheckCircle2 size={18} className="text-[#E65100]" />
@@ -175,11 +172,11 @@ export default function InformationPage() {
                 <ul className="space-y-2">
                     {sidebar_links && sidebar_links.map((link) => (
                         <li key={link.slug}>
-                            <Link 
-                                href={`/informacoes/${link.slug}`} 
+                            <Link
+                                href={`/informacoes/${link.slug}`}
                                 className={`flex items-center text-sm font-medium p-3 rounded-lg transition-all ${
-                                    slug === link.slug 
-                                    ? 'bg-orange-50 text-[#E65100] border border-orange-100' 
+                                    slug === link.slug
+                                    ? 'bg-orange-50 text-[#E65100] border border-orange-100'
                                     : 'text-gray-600 hover:bg-gray-50 hover:text-[#E65100]'
                                 }`}
                             >

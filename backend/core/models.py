@@ -1,10 +1,9 @@
 from django.db import models
-from ckeditor.fields import RichTextField
 
 # --- 1. HERO SECTION ---
 class HeroSection(models.Model):
     title = models.CharField("Título (H1)", max_length=200, help_text="Ex: Usinagem de Precisão")
-    subtitle = models.CharField("Subtítulo (H4)", max_length=200, help_text="Ex: Soluções para Indústria 4.0")
+    subtitle = models.TextField("Subtítulo (H4)", help_text="Ex: Soluções para Indústria 4.0")
     cta_text = models.CharField("Texto do Botão", max_length=50, default="Fale Conosco")
     cta_link = models.CharField("Link do Botão", max_length=200, default="#contato")
     image = models.ImageField("Imagem Principal", upload_to="hero/")
@@ -21,16 +20,16 @@ class HeroSection(models.Model):
 class AboutSection(models.Model):
     # --- HOME & GERAL ---
     title = models.CharField("Título Principal", max_length=200, default="Nossa História")
-    text = models.TextField("Texto Principal") 
-    image = models.ImageField("Imagem Principal (Home)", upload_to="about/") 
-    
+    text = models.TextField("Texto Principal")
+    image = models.ImageField("Imagem Principal (Home)", upload_to="about/")
+
     # --- EXCLUSIVO INTERNA ---
     internal_image = models.ImageField("Imagem Lateral (Interna)", upload_to="about_internal/", blank=True, null=True)
     internal_text = models.TextField("Texto Completo (Interna)", blank=True)
     banner_image = models.ImageField("Banner do Topo (Interna)", upload_to="about_banner/", blank=True, null=True)
     tag = models.CharField("Tag Superior", max_length=50, default="Quem Somos")
     subtitle = models.TextField("Subtítulo (Destaque Interna)", blank=True)
-    
+
     # --- MÍDIA ---
     youtube_video_id = models.CharField("Link ou ID do Youtube", max_length=200, blank=True)
     map_embed_url = models.TextField("Link ou Iframe do Mapa", blank=True)
@@ -79,7 +78,7 @@ class Differentiator(models.Model):
 
 # --- 4. SERVIÇOS (Cards & Internas) ---
 
-# 👇 ESSA CLASSE ESTAVA FALTANDO E CAUSOU O ERRO
+# Essa classe estava faltando e causou o erro.
 class ServiceGalleryImage(models.Model):
     service = models.ForeignKey('Service', related_name="gallery", on_delete=models.CASCADE)
     image = models.ImageField("Imagem", upload_to="services/gallery/")
@@ -97,12 +96,12 @@ class Service(models.Model):
     slug = models.SlugField("Slug (URL)", unique=True, blank=True, null=True)
     short_description = models.TextField("Descrição Curta (Card)")
     icon = models.ImageField("Ícone/Imagem", upload_to="services/", blank=True, null=True)
-    
+
     # Campos da Página Interna
     internal_subtitle = models.CharField("Subtítulo Interno", max_length=200, blank=True, null=True)
     internal_text = models.TextField("Texto Completo", blank=True, null=True)
     internal_image = models.ImageField("Imagem Interna", upload_to="services/internal/", blank=True, null=True)
-    
+
     # Campos Extras (Rich Text e Regiões - Opcionais para Serviços, mas bons ter)
     rich_text = models.TextField("Texto Completo (HTML)", blank=True)
     regions_served = models.TextField("Cidades/Regiões Atendidas", blank=True)
@@ -164,7 +163,7 @@ class Partner(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 # --- 8. DEPOIMENTOS ---
 class Testimonial(models.Model):
     name = models.CharField("Nome da Pessoa", max_length=100)
@@ -181,7 +180,7 @@ class Testimonial(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 class TestimonialsSection(models.Model):
     title = models.CharField("Título Principal", max_length=200, default="Parceiro técnico de indústrias\nQue não podem parar")
     subtitle = models.TextField("Texto de Apoio")
@@ -212,7 +211,7 @@ class BlogPost(models.Model):
     title = models.CharField("Título do Post", max_length=200)
     slug = models.SlugField("Slug (URL)", unique=True, help_text="Identificador único para a URL")
     image = models.ImageField("Capa do Post", upload_to="blog/")
-    content = models.TextField("Conteúdo Completo do Post") 
+    content = models.TextField("Conteúdo Completo do Post")
     author = models.CharField("Autor", max_length=100, default="Time Competec")
     date = models.DateField("Data de Publicação", default="2025-10-10")
     order = models.PositiveIntegerField("Ordem", default=0)
@@ -224,12 +223,12 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
-    
+
 #--- 10. RODAPÉ (FOOTER) ---
 class FooterConfig(models.Model):
     logo = models.ImageField("Logo do Rodapé", upload_to="footer/")
     description = models.TextField("Texto Sobre (Coluna 1)", default="Trabalhamos há mais de 20 anos...")
-    
+
     address_title = models.CharField("Título Endereço", max_length=50, default="Endereço")
     address_text = models.TextField("Endereço Completo")
 
@@ -258,14 +257,12 @@ class InformationPage(models.Model):
     title = models.CharField("Título da Página", max_length=200)
     slug = models.SlugField("Slug (URL)", unique=True, help_text="Ex: cidades-atendidas")
     banner = models.ImageField("Banner do Topo", upload_to="info_banners/")
-    
-    # MUDANÇA 1: Usando RichTextField (Editor estilo Word)
-    intro_text = RichTextField("Texto Introdutório", blank=True, help_text="Escreva o texto como no Word")
-    
+    intro_text = models.TextField("Texto Introdutorio", blank=True, help_text="Escreva o texto como no Word")
+
     # MUDANÇA 2: Mudamos a instrução para usar vírgulas
     regions_content = models.TextField(
-        "Lista de Cidades/Regiões", 
-        blank=True, 
+        "Lista de Cidades/Regiões",
+        blank=True,
         help_text="Digite as cidades separadas por vírgula. Ex: Curitiba, São Paulo, Anápolis, Goiânia"
     )
 
@@ -293,7 +290,7 @@ class InformationGalleryImage(models.Model):
 class NavbarConfig(models.Model):
     logo = models.ImageField(upload_to='navbar/', verbose_name="Logo do Site")
     alt_text = models.CharField(max_length=255, default="Competec", verbose_name="Texto Alternativo (Alt)")
-    
+
     # Redes Sociais (Opcional, mas bom ter)
     facebook_link = models.URLField(blank=True, null=True, verbose_name="Facebook")
     instagram_link = models.URLField(blank=True, null=True, verbose_name="Instagram")

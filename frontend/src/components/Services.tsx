@@ -31,10 +31,10 @@ export function Services({ cardData, sectionData }: ServicesProps) {
   return (
     // 1. ADICIONADO id="services" PARA O MENU FUNCIONAR
     <section id="services" className="w-full bg-white py-20 lg:py-32">
-      <div className="mx-auto grid max-w-[1216px] grid-cols-1 gap-12 px-6 lg:grid-cols-2 lg:items-start">
+      <div className="mx-auto grid max-w-[1216px] grid-cols-1 gap-12 px-6 lg:grid-cols-2 lg:items-stretch">
         
         {/* --- COLUNA DA ESQUERDA --- */}
-        <div className="flex flex-col gap-10">
+        <div className="flex h-full flex-col gap-10">
           
           {/* Cabeçalho */}
           <div>
@@ -50,12 +50,12 @@ export function Services({ cardData, sectionData }: ServicesProps) {
           </div>
 
           {/* Lista de Cards */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-1 flex-col gap-6">
             {cardData.map((item) => (
               // 2. ENVOLVIDO COM LINK (Sem quebrar o layout)
-              <Link key={item.id} href={`/solucoes/${item.slug}`} className="block">
+              <Link key={item.id} href={`/solucoes/${item.slug}`} className="block flex-1">
                   <div 
-                    className="group relative rounded-2xl border border-gray-200 bg-white p-8 transition-all hover:border-[#E65100] hover:shadow-lg"
+                    className="group relative flex h-full min-h-[250px] flex-col justify-center rounded-2xl border border-gray-200 bg-white p-8 transition-all hover:border-[#E65100] hover:shadow-lg"
                   >
                     <div className="flex items-start justify-between">
                       <h3 className="text-xl font-bold text-[#2C3E50] mb-4 pr-12">

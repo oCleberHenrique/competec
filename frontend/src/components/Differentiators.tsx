@@ -54,11 +54,11 @@ export function Differentiators({ data }: DifferentiatorsProps) {
             </span>
             <h2 className="mt-2 text-4xl font-bold leading-tight text-[#2C3E50] lg:text-5xl">
               Três pilares.<br />
-              Um parceiro.
+              Sua operação mais eficiente.
             </h2>
           </div>
           <div className="pb-2 text-lg text-gray-600 lg:max-w-md">
-            Competec é o único que une usinagem de precisão, automação industrial e metrologia acreditada.
+            A Competec é o seu parceiro para aumentar a eficiência, previsibilidade e maturidade das operações industriais
           </div>
         </div>
 

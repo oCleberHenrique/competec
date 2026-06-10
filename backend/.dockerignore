@@ -11,7 +11,13 @@ __pycache__
 
 # Ignora banco de dados local (se houver sqlite)
 db.sqlite3
+staticfiles
+.pytest_cache
+.mypy_cache
+.ruff_cache
 
 # Ignora arquivos de sistema
 .DS_Store
 Thumbs.db
+.git
+.gitignore

@@ -9,10 +9,12 @@ export function CookieBanner() {
 
   useEffect(() => {
     // Verifica se já aceitou antes
-    const accepted = localStorage.getItem("competec_cookies_accepted");
-    if (!accepted) {
-      setShow(true);
-    }
+    const timer = window.setTimeout(() => {
+      const accepted = localStorage.getItem("competec_cookies_accepted");
+      setShow(!accepted);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   const acceptCookies = () => {
@@ -36,6 +38,7 @@ export function CookieBanner() {
         <div className="flex items-center gap-3">
             <button 
                 onClick={() => setShow(false)} 
+                aria-label="Fechar aviso de cookies"
                 className="text-gray-400 hover:text-white"
             >
                 <X size={20} />

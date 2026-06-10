@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export const getApiUrl = () => {
+  return (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/$/, "");
+};
+
 export const getImageUrl = (path: string | null | undefined) => {
   if (!path) return "";
   
@@ -12,7 +16,7 @@ export const getImageUrl = (path: string | null | undefined) => {
   if (path.startsWith("http")) return path;
 
  
-  const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "https://api.v4jasson.com.br").replace(/\/$/, "");
+  const apiUrl = getApiUrl();
 
   const cleanPath = path.startsWith("/") ? path.substring(1) : path;
 

@@ -138,11 +138,13 @@ class NavbarDataView(APIView):
 
         # 2. Lógica para pegar o último post de informação
         latest_info = InformationPage.objects.filter(is_active=True).order_by('-id').first()
+        active_services = Service.objects.filter(is_active=True).order_by('order').values('title', 'slug')
         
         # 3. Mescla os dados
         response_data = {
             **config_data, 
-            "latest_info_slug": latest_info.slug if latest_info else None
+            "latest_info_slug": latest_info.slug if latest_info else None,
+            "services": list(active_services),
         }
         
         return Response(response_data)

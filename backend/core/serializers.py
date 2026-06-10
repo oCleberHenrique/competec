@@ -52,7 +52,8 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = Service
         fields = [
             "id", "title", "description", "icon", "slug", 
-            "internal_subtitle", "internal_text", "internal_image", "cta_text", "cta_link"
+            "internal_subtitle", "internal_text", "internal_image", "rich_text",
+            "regions_served", "cta_text", "cta_link"
         ]
 
 class HistorySectionSerializer(serializers.ModelSerializer):

@@ -1,13 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ComponentProps } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Loader2, CheckCircle2, History } from "lucide-react"; // Adicionei ícones novos
+import { CheckCircle2, History } from "lucide-react"; // Adicionei ícones novos
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { getApiUrl, getImageUrl } from "@/lib/utils";
+
+type FooterData = ComponentProps<typeof Footer>["data"];
 
 // --- FUNÇÕES HELPER (INTELIGÊNCIA) ---
 
@@ -44,9 +48,9 @@ interface ValueCard {
 // Novas interfaces para os dados que faltavam
 interface HistoryItem {
   id: number;
-  year: string;
+  tag: string;
   title: string;
-  description: string;
+  text: string;
 }
 
 interface DifferentiatorItem {
@@ -67,9 +71,9 @@ interface AboutData {
     tag: string;
     title: string;
     subtitle: string;
-    text: string;  
+    text: string;
     internal_text: string;
-    image: string; 
+    image: string;
     internal_image: string | null;
     youtube_video_id: string;
     map_embed_url: string;
@@ -82,7 +86,7 @@ interface AboutData {
   history: HistoryItem[];
   differentiators: DifferentiatorItem[];
   partners: PartnerItem[];
-  footer: any;
+  footer: FooterData;
 }
 
 export default function AboutPage() {
@@ -94,8 +98,8 @@ export default function AboutPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/about-page/?t=${Date.now()}`, { 
-            cache: 'no-store' 
+        const res = await fetch(`${getApiUrl()}/api/about-page/?t=${Date.now()}`, {
+            cache: 'no-store'
         });
         if (!res.ok) throw new Error("Erro ao buscar dados");
         const json = await res.json();
@@ -109,27 +113,16 @@ export default function AboutPage() {
     fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-white">
-        <Loader2 className="h-10 w-10 animate-spin text-orange-600" />
-      </div>
-    );
-  }
+  if (loading) return null;
 
   if (!data?.about) return null;
 
   const { about, history, differentiators, partners } = data;
-  
-  const getFullUrl = (path: string | null) => {
-    if (!path) return ""; 
-    return path.startsWith("http") ? path : `${process.env.NEXT_PUBLIC_API_URL}${path}`;
-  };
 
   const mainDisplayImage = about.internal_image || about.image;
   const youtubeId = extractYouTubeId(about.youtube_video_id);
   const mapSrc = extractMapSrc(about.map_embed_url);
-  const lightboxSlides = about.gallery.map(item => ({ src: getFullUrl(item.image) }));
+  const lightboxSlides = about.gallery.map(item => ({ src: getImageUrl(item.image) }));
 
   return (
     <main className="min-h-screen bg-white">
@@ -139,7 +132,7 @@ export default function AboutPage() {
       <div className="relative mt-20 h-[250px] w-full lg:h-[350px]">
         {about.banner_image ? (
           <Image
-            src={getFullUrl(about.banner_image)}
+            src={getImageUrl(about.banner_image)}
             alt="Banner Quem Somos"
             fill
             className="object-cover"
@@ -158,7 +151,7 @@ export default function AboutPage() {
       </div>
 
       <div className="mx-auto max-w-[1216px] px-6 py-16 lg:py-24">
-        
+
         {/* 2. CONTEÚDO PRINCIPAL */}
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 items-center">
           <div>
@@ -168,7 +161,7 @@ export default function AboutPage() {
             <h2 className="mt-2 text-3xl font-bold leading-tight text-[#2C3E50] lg:text-4xl">
               {about.title}
             </h2>
-            
+
             {about.subtitle && (
                 <p className="mt-4 text-xl font-medium text-gray-700">
                   {about.subtitle}
@@ -183,8 +176,8 @@ export default function AboutPage() {
           </div>
 
           <div className="relative h-[400px] w-full overflow-hidden rounded-2xl shadow-lg lg:h-[500px]">
-            <Image 
-              src={getFullUrl(mainDisplayImage)}
+            <Image
+              src={getImageUrl(mainDisplayImage)}
               alt={about.title}
               fill
               className="object-cover"
@@ -199,8 +192,8 @@ export default function AboutPage() {
             {about.values.map((card) => (
               <div key={card.id} className="flex flex-col items-center text-center p-6 rounded-2xl bg-gray-50 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                 <div className="relative h-16 w-16 mb-4">
-                  <Image 
-                    src={getFullUrl(card.icon)}
+                  <Image
+                    src={getImageUrl(card.icon)}
                     alt={card.title}
                     fill
                     className="object-contain"
@@ -223,7 +216,7 @@ export default function AboutPage() {
                     <span className="text-[#E65100] font-bold uppercase tracking-wider">Nossa Jornada</span>
                     <h2 className="text-3xl font-bold text-[#2C3E50] mt-2">História da Competec</h2>
                 </div>
-                
+
                 <div className="relative border-l-4 border-gray-200 ml-6 lg:ml-1/2 space-y-12">
                     {history.map((item) => (
                         <div key={item.id} className="relative pl-8 lg:pl-12">
@@ -231,11 +224,11 @@ export default function AboutPage() {
                             <div className="absolute -left-[14px] top-0 flex h-6 w-6 items-center justify-center rounded-full bg-[#E65100] ring-4 ring-white">
                                 <History className="h-3 w-3 text-white" />
                             </div>
-                            
+
                             <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                                <span className="text-2xl font-bold text-[#E65100] block mb-2">{item.year}</span>
+                                <span className="text-2xl font-bold text-[#E65100] block mb-2">{item.tag}</span>
                                 <h3 className="text-xl font-bold text-[#2C3E50] mb-2">{item.title}</h3>
-                                <p className="text-gray-600">{item.description}</p>
+                                <p className="text-gray-600">{item.text}</p>
                             </div>
                         </div>
                     ))}
@@ -273,8 +266,8 @@ export default function AboutPage() {
             <h3 className="mb-8 text-2xl font-bold text-[#2C3E50]">Nossa Estrutura</h3>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               {about.gallery.map((item, index) => (
-                <div 
-                  key={item.id} 
+                <div
+                  key={item.id}
                   className="relative aspect-square cursor-pointer overflow-hidden rounded-lg bg-gray-200 transition-opacity hover:opacity-90"
                   onClick={() => {
                     setPhotoIndex(index);
@@ -282,7 +275,7 @@ export default function AboutPage() {
                   }}
                 >
                   <Image
-                    src={getFullUrl(item.image)}
+                    src={getImageUrl(item.image)}
                     alt={`Galeria ${index}`}
                     fill
                     className="object-cover transition-transform duration-500 hover:scale-105"
@@ -318,10 +311,10 @@ export default function AboutPage() {
                 <div className="flex flex-wrap justify-center gap-12 items-center opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
                     {partners.map((partner) => (
                         <div key={partner.id} className="relative h-16 w-32 lg:h-20 lg:w-40">
-                             <Image 
-                                src={getFullUrl(partner.logo)} 
-                                alt={partner.name} 
-                                fill 
+                             <Image
+                                src={getImageUrl(partner.logo)}
+                                alt={partner.name}
+                                fill
                                 className="object-contain"
                                 unoptimized
                             />
@@ -335,13 +328,13 @@ export default function AboutPage() {
       {/* 6. MAPA */}
       {mapSrc && (
         <div className="w-full h-[400px] bg-gray-200">
-            <iframe 
-                src={mapSrc} 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen={true} 
-                loading="lazy" 
+            <iframe
+                src={mapSrc}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
         </div>
@@ -353,7 +346,7 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-white mb-8">
                 Pronto para transformar sua indústria?
             </h2>
-            <Link 
+            <Link
                 href={about.cta_link || "/contato"}
                 target="_blank"
                 className="inline-flex items-center justify-center rounded-lg bg-[#E65100] px-10 py-4 text-lg font-bold text-white transition-all hover:bg-white hover:text-[#E65100]"

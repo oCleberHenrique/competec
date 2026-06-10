@@ -9,10 +9,21 @@ from django.utils.translation import gettext_lazy as _
 # --- Caminhos Base ---
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+def env_bool(name: str, default: bool = False) -> bool:
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def env_list(name: str, default: str = "") -> list[str]:
+    return [item.strip() for item in os.environ.get(name, default).split(",") if item.strip()]
+
 # --- Segurança ---
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-dev-key-competec-2025")
-DEBUG = True
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,backend").split(",")
+DEBUG = env_bool("DJANGO_DEBUG", default=True)
+ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,backend")
 
 # --- Aplicações Instaladas ---
 INSTALLED_APPS = [
@@ -38,7 +49,6 @@ INSTALLED_APPS = [
     # 4. Third Party Apps
     "rest_framework",
     "corsheaders",
-    "ckeditor",
 ]
 
 # --- Middleware ---
@@ -76,13 +86,22 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 # --- Banco de Dados ---
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # --- Validação de Senha ---
 AUTH_PASSWORD_VALIDATORS = [
@@ -131,12 +150,11 @@ REST_FRAMEWORK = {
 }
 
 # --- Configuração CORS ---
-CORS_ALLOW_ALL_ORIGINS = True 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://competec.v4jasson.com.br",
-    "https://v4jasson.com.br",
-]
+CORS_ALLOW_ALL_ORIGINS = env_bool("CORS_ALLOW_ALL_ORIGINS", default=DEBUG)
+CORS_ALLOWED_ORIGINS = env_list(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:3000,https://competec.v4jasson.com.br,https://v4jasson.com.br",
+)
 CORS_ALLOW_CREDENTIALS = True
 # --- UNFOLD ADMIN CONFIGURATION ---
 UNFOLD = {
@@ -304,24 +322,12 @@ UNFOLD = {
     },
 }
 
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Custom',
-        'toolbar_Custom': [
-            ['Bold', 'Italic', 'Underline'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Link', 'Unlink'],
-            ['RemoveFormat', 'Source']
-        ],
-        'width': 'auto',
-    }
-}
 
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://api.v4jasson.com.br",
-    "https://competec.v4jasson.com.br",
-]
+CSRF_TRUSTED_ORIGINS = env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    "https://api.v4jasson.com.br,https://competec.v4jasson.com.br",
+)
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
