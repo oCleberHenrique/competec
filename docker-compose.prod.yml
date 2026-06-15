@@ -7,8 +7,8 @@ services:
     volumes:
       - ./backend/staticfiles:/app/staticfiles
       - ./backend/media:/app/media
-    expose:
-      - 8000
+    ports:
+      - "8000:8000"
     env_file:
       - path: ./backend/.env
         required: false
@@ -31,9 +31,12 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: runner
+      args:
+        NEXT_PUBLIC_API_URL: https://app.grupocompetec.com.br
  
     environment:
-      - NEXT_PUBLIC_API_URL=https://api.v4jasson.com.br
+      - NEXT_PUBLIC_API_URL=https://app.grupocompetec.com.br
     ports:
       - "3000:3000"
     restart: always

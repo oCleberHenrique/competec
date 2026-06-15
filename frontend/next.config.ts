@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   images: {
     // Se as imagens continuarem dando erro, descomente a linha abaixo (tira a proteção de otimização):
     unoptimized: true, 
@@ -9,7 +10,7 @@ const nextConfig: NextConfig = {
       // 1. REGRA DE PRODUÇÃO (ESSENCIAL - Adicionada agora)
       {
         protocol: "https",
-        hostname: "api.v4jasson.com.br",
+        hostname: "app.grupocompetec.com.br",
         pathname: "/media/**",
       },
       
