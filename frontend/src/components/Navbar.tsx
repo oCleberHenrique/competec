@@ -45,6 +45,8 @@ export function Navbar() {
     menuItems.push({ label: "INFORMAÇÕES", href: `/informacoes/${latestInfoSlug}` });
   }
 
+  const getServiceHref = (slug: string) => (slug === "calibracao" ? "/calibracao" : `/solucoes/${slug}`);
+
   return (
     <>
       <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
@@ -97,7 +99,7 @@ export function Navbar() {
                   {services.map((service) => (
                     <Link
                       key={service.slug}
-                      href={`/solucoes/${service.slug}`}
+                      href={getServiceHref(service.slug)}
                       className="block rounded-lg px-4 py-3 text-sm font-bold text-gray-100 transition-colors hover:bg-white/10 hover:text-[#E65100]"
                     >
                       {service.title}
@@ -162,7 +164,7 @@ export function Navbar() {
                   {services.map((service) => (
                     <Link
                       key={service.slug}
-                      href={`/solucoes/${service.slug}`}
+                      href={getServiceHref(service.slug)}
                       className="text-sm font-medium text-gray-500 hover:text-[#E65100]"
                       onClick={() => setIsOpen(false)}
                     >

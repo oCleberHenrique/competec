@@ -90,6 +90,49 @@ class ServiceGalleryImage(models.Model):
         verbose_name_plural = "Galeria de Imagens do Serviço"
         ordering = ["order"]
 
+class ServiceEquipmentCategory(models.Model):
+    service = models.ForeignKey('Service', related_name="equipment_categories", on_delete=models.CASCADE)
+    title = models.CharField("Titulo", max_length=120)
+    description = models.TextField("Itens / Descricao", help_text="Use uma linha para cada item.", blank=True)
+    cta_text = models.CharField("Texto do botao", max_length=80, default="Solicite orcamento")
+    order = models.PositiveIntegerField("Ordem", default=0)
+
+    class Meta:
+        verbose_name = "Categoria / Equipamento"
+        verbose_name_plural = "Categorias / Equipamentos"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.title
+
+class ServiceBenefit(models.Model):
+    service = models.ForeignKey('Service', related_name="benefits", on_delete=models.CASCADE)
+    title = models.CharField("Titulo", max_length=160)
+    description = models.TextField("Descricao")
+    order = models.PositiveIntegerField("Ordem", default=0)
+
+    class Meta:
+        verbose_name = "Diferencial / Beneficio"
+        verbose_name_plural = "Diferenciais / Beneficios"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.title
+
+class ServiceFAQ(models.Model):
+    service = models.ForeignKey('Service', related_name="faqs", on_delete=models.CASCADE)
+    question = models.CharField("Pergunta", max_length=220)
+    answer = models.TextField("Resposta")
+    order = models.PositiveIntegerField("Ordem", default=0)
+
+    class Meta:
+        verbose_name = "Pergunta frequente"
+        verbose_name_plural = "Perguntas frequentes"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.question
+
 class Service(models.Model):
     # Campos do Card (Home)
     title = models.CharField("Título", max_length=200)

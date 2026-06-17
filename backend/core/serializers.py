@@ -2,7 +2,8 @@ from rest_framework import serializers
 from .models import (
     BlogSection, FooterConfig, AboutGalleryImage, AboutValueCard, 
     HeroSection, AboutSection, Differentiator, HistorySection, 
-    InformationGalleryImage, InformationPage, Partner, Service, 
+    InformationGalleryImage, InformationPage, Partner, Service, ServiceBenefit,
+    ServiceEquipmentCategory, ServiceFAQ, ServiceGalleryImage,
     ServicesSection, Testimonial, TestimonialsSection, BlogPost, NavbarConfig
 )
 
@@ -44,16 +45,41 @@ class ServicesSectionSerializer(serializers.ModelSerializer):
         model = ServicesSection
         fields = ["heading", "title", "image"]
 
+class ServiceGalleryImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceGalleryImage
+        fields = ["id", "image", "description", "order"]
+
+class ServiceEquipmentCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceEquipmentCategory
+        fields = ["id", "title", "description", "cta_text", "order"]
+
+class ServiceBenefitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceBenefit
+        fields = ["id", "title", "description", "order"]
+
+class ServiceFAQSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceFAQ
+        fields = ["id", "question", "answer", "order"]
+
 # --- 2. Serializador dos CARDS
 class ServiceSerializer(serializers.ModelSerializer):
     description = serializers.CharField(source="short_description", read_only=True)
+    gallery = ServiceGalleryImageSerializer(many=True, read_only=True)
+    equipment_categories = ServiceEquipmentCategorySerializer(many=True, read_only=True)
+    benefits = ServiceBenefitSerializer(many=True, read_only=True)
+    faqs = ServiceFAQSerializer(many=True, read_only=True)
 
     class Meta:
         model = Service
         fields = [
             "id", "title", "description", "icon", "slug", 
             "internal_subtitle", "internal_text", "internal_image", "rich_text",
-            "regions_served", "cta_text", "cta_link"
+            "regions_served", "cta_text", "cta_link", "gallery",
+            "equipment_categories", "benefits", "faqs"
         ]
 
 class HistorySectionSerializer(serializers.ModelSerializer):

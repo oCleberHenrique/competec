@@ -9,7 +9,7 @@ from .models import (
     AboutSection, AboutGalleryImage, AboutValueCard,
     Differentiator,
     NavbarConfig, 
-    Service, ServiceGalleryImage, ServicesSection, 
+    Service, ServiceBenefit, ServiceEquipmentCategory, ServiceFAQ, ServiceGalleryImage, ServicesSection, 
     HistorySection, 
     Partner, 
     Testimonial, TestimonialsSection, 
@@ -58,12 +58,33 @@ class ServiceGalleryInline(TabularInline):
     extra = 1
     tab = True
 
+class ServiceEquipmentCategoryInline(TabularInline):
+    model = ServiceEquipmentCategory
+    extra = 1
+    tab = True
+
+class ServiceBenefitInline(TabularInline):
+    model = ServiceBenefit
+    extra = 1
+    tab = True
+
+class ServiceFAQInline(TabularInline):
+    model = ServiceFAQ
+    extra = 1
+    tab = True
+
 @admin.register(Service)
 class ServiceAdmin(ModelAdmin):
-    list_display = ["title", "order", "is_active"]
+    list_display = ["title", "slug", "order", "is_active"]
     list_editable = ["order"]
-    search_fields = ["title"]
-    inlines = [ServiceGalleryInline] # <--- Adiciona a galeria aqui
+    search_fields = ["title", "slug"]
+    prepopulated_fields = {"slug": ("title",)}
+    inlines = [
+        ServiceGalleryInline,
+        ServiceEquipmentCategoryInline,
+        ServiceBenefitInline,
+        ServiceFAQInline,
+    ]
 
 # --- 5. SERVIÇOS (CAPA) ---
 @admin.register(ServicesSection)

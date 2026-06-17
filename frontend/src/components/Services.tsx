@@ -27,6 +27,7 @@ interface ServicesProps {
 
 export function Services({ cardData, sectionData }: ServicesProps) {
   // (Removemos a lógica manual antiga daqui)
+  const getServiceHref = (slug: string) => (slug === "calibracao" ? "/calibracao" : `/solucoes/${slug}`);
 
   return (
     // 1. ADICIONADO id="services" PARA O MENU FUNCIONAR
@@ -53,7 +54,7 @@ export function Services({ cardData, sectionData }: ServicesProps) {
           <div className="flex flex-1 flex-col gap-6">
             {cardData.map((item) => (
               // 2. ENVOLVIDO COM LINK (Sem quebrar o layout)
-              <Link key={item.id} href={`/solucoes/${item.slug}`} className="block flex-1">
+              <Link key={item.id} href={getServiceHref(item.slug)} className="block flex-1">
                   <div 
                     className="group relative flex h-full min-h-[250px] flex-col justify-center rounded-2xl border border-gray-200 bg-white p-8 transition-all hover:border-[#E65100] hover:shadow-lg"
                   >

@@ -29,6 +29,22 @@ interface ServiceData {
   regions_served?: string;
   cta_text?: string;
   cta_link?: string;
+  equipment_categories?: Array<{
+    id: number;
+    title: string;
+    description: string;
+    cta_text?: string;
+  }>;
+  benefits?: Array<{
+    id: number;
+    title: string;
+    description: string;
+  }>;
+  faqs?: Array<{
+    id: number;
+    question: string;
+    answer: string;
+  }>;
 }
 
 interface PageData {
@@ -66,15 +82,15 @@ function parseRichText(value?: string): ParsedContent {
     .map((line) => line.trim())
     .filter(Boolean);
 
-  const indexOf = (text: string) => lines.findIndex((line) => line === text);
+  const indexOf = (...texts: string[]) => lines.findIndex((line) => texts.includes(line));
   const slice = (start: number, end: number) =>
     start >= 0 ? lines.slice(start + 1, end >= 0 ? end : undefined) : [];
 
-  const servicesIndex = indexOf("CONHEÇA NOSSOS SERVIÇOS DE USINAGEM");
-  const componentsIndex = indexOf("COMPONENTES JÁ PRODUZIDOS");
-  const challengesIndex = indexOf("QUANDO SUA OPERAÇÃO ENFRENTA ESTES DESAFIOS");
-  const developmentIndex = indexOf("DESENVOLVIMENTO TÉCNICO OU RECUPERAÇÃO DE COMPONENTES CRÍTICOS");
-  const capacityIndex = indexOf("CAPACIDADE PRODUTIVA PARA ESCALA E DEMANDA CONTÍNUA");
+  const servicesIndex = indexOf("CONHEÇA NOSSOS SERVIÇOS DE USINAGEM", "CONHECA NOSSOS SERVICOS DE CALIBRACAO");
+  const componentsIndex = indexOf("COMPONENTES JÁ PRODUZIDOS", "COMPONENTES JA ATENDIDOS");
+  const challengesIndex = indexOf("QUANDO SUA OPERAÇÃO ENFRENTA ESTES DESAFIOS", "QUANDO SUA OPERACAO ENFRENTA ESTES DESAFIOS");
+  const developmentIndex = indexOf("DESENVOLVIMENTO TÉCNICO OU RECUPERAÇÃO DE COMPONENTES CRÍTICOS", "CONFIABILIDADE METROLOGICA PARA SUA OPERACAO");
+  const capacityIndex = indexOf("CAPACIDADE PRODUTIVA PARA ESCALA E DEMANDA CONTÍNUA", "ROTINA TECNICA COM RASTREABILIDADE E ORGANIZACAO");
   const finalIndex = lines.findIndex((line) => line.startsWith("MAIS DE 25 ANOS"));
 
   return {
@@ -123,12 +139,13 @@ async function getServiceData(slug: string): Promise<PageData | null> {
   }
 }
 
-function getUsinagemCardImage(index: number) {
-  return `${getApiUrl()}/media/services/usinagem-b/card-${index + 1}.png`;
+function getSpecialServiceCardImage(mediaSlug: string, index: number) {
+  return `${getApiUrl()}/media/services/${mediaSlug}/card-${index + 1}.png`;
 }
 
-function getUsinagemGalleryImage(index: number) {
-  return `${getApiUrl()}/media/services/usinagem-b/gallery/usinagem-gallery-${index + 1}.png`;
+function getSpecialServiceGalleryImage(mediaSlug: string, index: number) {
+  const prefix = mediaSlug === "calibracao" ? "calibracao" : "usinagem";
+  return `${getApiUrl()}/media/services/${mediaSlug}/gallery/${prefix}-gallery-${index + 1}.png`;
 }
 
 const usinagemGalleryItems = [
@@ -138,6 +155,15 @@ const usinagemGalleryItems = [
   "Guias de Movimentação",
   "Gabaritos de Montagem",
   "Facas, Bicos e Pinos",
+];
+
+const calibracaoGalleryItems = [
+  "Instrumentos Dimensionais",
+  "Dispositivos de Medicao",
+  "Controle de Equipamentos",
+  "Certificados Rastreaveis",
+  "Inspecao Tecnica",
+  "Apoio a Auditorias",
 ];
 
 const usinagemChallenges = [
@@ -156,6 +182,25 @@ const usinagemChallenges = [
   {
     title: "Necessidade de produzir em escala",
     text: "Fabricamos componentes recorrentes com padrão técnico.",
+  },
+];
+
+const calibracaoChallenges = [
+  {
+    title: "Instrumentos fora do prazo",
+    text: "Sua rotina precisa de controle metrologico previsivel.",
+  },
+  {
+    title: "Auditorias exigindo evidencias",
+    text: "Organizamos registros e certificados rastreaveis.",
+  },
+  {
+    title: "Medicoes inconsistentes",
+    text: "Reduzimos riscos de retrabalho e nao conformidade.",
+  },
+  {
+    title: "Equipamentos criticos sem controle",
+    text: "Apoiamos a gestao tecnica dos instrumentos da operacao.",
   },
 ];
 
@@ -194,6 +239,162 @@ const usinagemCapabilityColumns = [
   },
 ];
 
+const calibracaoCapabilityColumns = [
+  {
+    title: "Confiabilidade\nmetrologica para sua\noperacao",
+    text: "Apoiamos sua industria no controle de instrumentos e dispositivos para reduzir riscos de medicao, retrabalho e nao conformidades.",
+    cards: [
+      {
+        icon: Gauge,
+        title: "Controle de instrumentos",
+        text: "Mapeamos e apoiamos a calibracao de instrumentos essenciais para manter a confiabilidade das medicoes.",
+      },
+      {
+        icon: ClipboardCheck,
+        title: "Evidencias tecnicas",
+        text: "Mantemos certificados e registros alinhados as exigencias de auditorias, qualidade e controle produtivo.",
+      },
+    ],
+  },
+  {
+    title: "Rotina tecnica\ncom rastreabilidade\ne organizacao",
+    text: "Estruturamos a calibracao como parte do controle operacional, com registros, prazos e documentacao preparados para auditorias.",
+    cards: [
+      {
+        icon: PackageCheck,
+        title: "Rastreabilidade",
+        text: "Acompanhamos informacoes tecnicas para que cada instrumento tenha historico claro e confiavel.",
+      },
+      {
+        icon: Factory,
+        title: "Suporte industrial",
+        text: "Atuamos junto a manutencao, qualidade e producao para manter a rotina metrologica fluida.",
+      },
+    ],
+  },
+];
+
+const calibracaoEquipmentCategories = [
+  {
+    title: "Dimensional",
+    items: [
+      "Paquimetros, micrometros, relogios comparadores",
+      "Trena, prumo, esquadros e blocos-padrao",
+      "Peneiras granulometricas, durometros",
+      "Fitas metricas",
+    ],
+  },
+  {
+    title: "Temperatura",
+    items: [
+      "Termometros digitais e analogicos",
+      "Termopares e PT100",
+      "Banhos termicos",
+      "Data loggers de temperatura",
+    ],
+  },
+  {
+    title: "Pressao",
+    items: [
+      "Manometros analogicos e digitais",
+      "Vacuometros e manovacuometros",
+      "Transdutores e transmissores de pressao",
+      "Valvulas de seguranca e alivio",
+    ],
+  },
+  {
+    title: "Qualificacao de Equipamentos",
+    items: [
+      "Camaras frias e freezers",
+      "Estufas e fornos",
+      "Autoclaves",
+      "Mapeamento termico e qualificacao de desempenho",
+    ],
+  },
+  {
+    title: "Volumetria",
+    items: [
+      "Pipetas e micropipetas",
+      "Buretas e provetas",
+      "Dispensadores de liquidos",
+      "Baloes volumetricos e picnometros",
+    ],
+  },
+  {
+    title: "Massa e Balancas",
+    items: [
+      "Balancas analiticas e semianaliticas",
+      "Balancas industriais",
+      "Pesos padrao",
+      "Celulas de carga",
+    ],
+  },
+];
+
+const calibracaoAuthorityPoints = [
+  "Servicos reconhecidos e aceitos em auditorias rigorosas nacionais e internacionais.",
+  "Acreditacao RBC ISO/IEC 17025, comprovando competencia tecnica e garantia da qualidade.",
+  "Atendimento tecnico especializado para tirar duvidas e apontar o servico ideal.",
+];
+
+const calibracaoBenefits = [
+  {
+    title: "Rastreabilidade Comprovada",
+    text: "Certificados com evidencia de rastreabilidade a padroes nacionais/internacionais (RBC/Inmetro) que nao falham em auditorias.",
+  },
+  {
+    title: "Acreditacao CGCRE/INMETRO desde 2008",
+    text: "Maior escopo de calibracao de capital nacional do Centro-Oeste brasileiro, validando a excelencia metrologica da Competec.",
+  },
+  {
+    title: "Documentacao para auditorias",
+    text: "Relatorios claros, com incertezas de medicao, limites de erro toleraveis e orientacoes tecnicas de calibracao.",
+  },
+  {
+    title: "Atendimento consultivo",
+    text: "Nossa equipe orienta sobre a melhor abordagem e periodicidade para seu escopo de calibracao, focada no custo-beneficio.",
+  },
+  {
+    title: "Agilidade com qualidade",
+    text: "Prazos competitivos com entrega dos certificados atestados em nuvem.",
+  },
+];
+
+const calibracaoFaqs = [
+  {
+    question: "Qual a diferenca entre calibracao rastreavel e calibracao comum?",
+    answer: "Calibracao rastreavel possui cadeia documentada ligando o instrumento calibrado a padroes nacionais/internacionais reconhecidos. Calibracao comum, sem rastreabilidade, nao e aceita em auditorias de industrias reguladas e pode gerar nao conformidade.",
+  },
+  {
+    question: "O que e rastreabilidade RBC e por que isso importa?",
+    answer: "RBC (Rede Brasileira de Calibracao) e a rede de laboratorios acreditados pelo Inmetro que garante rastreabilidade reconhecida nacionalmente. Certificados com rastreabilidade RBC sao aceitos em auditorias ANVISA, ISO e outras normas tecnicas sem questionamentos.",
+  },
+  {
+    question: "Qual a periodicidade ideal para calibracao de instrumentos?",
+    answer: "Depende do instrumento, criticidade do processo e requisitos regulatorios do seu setor. A norma ISO/IEC 17025 recomenda periodicidade baseada em historico de deriva, mas industrias como as farmaceuticas geralmente calibram anualmente. Nosso time tecnico orienta a periodicidade adequada para cada caso atraves de consultoria e treinamento.",
+  },
+  {
+    question: "O certificado de calibracao tem validade?",
+    answer: "Tecnicamente, certificados de calibracao nao vencem. Eles atestam a condicao do instrumento na data da calibracao. A periodicidade de recalibracao deve ser definida pela empresa com base em normas aplicaveis, criticidade do processo e historico do instrumento.",
+  },
+  {
+    question: "Voces fazem calibracao in loco na minha empresa?",
+    answer: "Sim, para instrumentos de grande porte ou quando o transporte pode afetar a calibracao. Avaliamos caso a caso a viabilidade tecnica considerando condicoes ambientais e requisitos de rastreabilidade. Isso tambem reduz paradas de fabrica e de ativos.",
+  },
+  {
+    question: "Como funciona a qualificacao termica de equipamentos?",
+    answer: "Qualificacao termica mapeia a distribuicao de temperatura em camaras frias, estufas, autoclaves e outros equipamentos criticos. Utilizamos data loggers calibrados e seguimos protocolos validados para gerar relatorios aceitos em auditorias regulatorias.",
+  },
+  {
+    question: "Meu instrumento reprovou na calibracao. E agora?",
+    answer: "Emitimos certificado como encontrado documentando a condicao real do instrumento. Voce decide se ajusta, repara, solicita nova calibracao ou substitui o equipamento. A equipe orienta tecnicamente a melhor decisao no produto de consultoria.",
+  },
+  {
+    question: "Quanto tempo leva uma calibracao?",
+    answer: "Varia conforme o instrumento, escopo, documentos orientativos e complexidade de manuseio. O prazo sera informado no orcamento.",
+  },
+];
+
 export default async function ServiceInternalPage({
   params,
 }: {
@@ -208,11 +409,304 @@ export default async function ServiceInternalPage({
   const imageUrl = service.internal_image ? getImageUrl(service.internal_image) : null;
   const heroTitle = service.internal_subtitle || service.title;
   const heroText = service.internal_text || "Descrição detalhada em breve.";
-  const isUsinagemB = service.slug === "usinagem-b";
+  const isUsinagemB = service.slug === "usinagem-b" || service.slug === "calibracao";
+  const specialMediaSlug = service.slug === "calibracao" ? "calibracao" : "usinagem-b";
+  const galleryItems = service.slug === "calibracao" ? calibracaoGalleryItems : usinagemGalleryItems;
+  const challenges = service.slug === "calibracao" ? calibracaoChallenges : usinagemChallenges;
+  const capabilityColumns = service.slug === "calibracao" ? calibracaoCapabilityColumns : usinagemCapabilityColumns;
+  const challengesImageAlt = service.slug === "calibracao"
+    ? "Equipe tecnica analisando controle metrologico"
+    : "Gestor industrial analisando desafios de produÃ§Ã£o";
   const parsed = parseRichText(service.rich_text);
   const proofItems = service.regions_served
     ? service.regions_served.split(/[;\n]+/).map((item) => item.trim()).filter(Boolean)
     : [];
+  const isSpecialLanding = service.slug === "calibracao" || service.slug === "usinagem-b";
+  const equipmentCategories = service.equipment_categories?.length
+    ? service.equipment_categories.map((category) => ({
+        title: category.title,
+        items: category.description.split(/\r?\n/).map((item) => item.trim()).filter(Boolean),
+        ctaText: category.cta_text || service.cta_text || "Solicite orcamento",
+      }))
+    : service.slug === "calibracao"
+      ? calibracaoEquipmentCategories.map((category) => ({
+          ...category,
+          ctaText: "Solicite orcamento",
+        }))
+      : parsed.serviceItems.map((item) => ({
+          title: item,
+          items: [],
+          ctaText: service.cta_text || "Solicitar orcamento",
+        }));
+  const benefitItems = service.benefits?.length
+    ? service.benefits.map((benefit) => ({
+        title: benefit.title,
+        text: benefit.description,
+      }))
+    : service.slug === "calibracao"
+      ? calibracaoBenefits
+      : capabilityColumns.flatMap((column) => column.cards.map((card) => ({
+          title: card.title,
+          text: card.text,
+        })));
+  const faqItems = service.faqs?.length ? service.faqs : service.slug === "calibracao" ? calibracaoFaqs : [];
+  const landingCopy = service.slug === "calibracao"
+    ? {
+        equipmentTitle: "Quais sao os equipamentos e instrumentos que calibramos?",
+        equipmentText: "Temos um escopo amplo para atender as industrias, desde calibracoes com padroes certificados ate RBC em nosso laboratorio proprio.",
+        callout: "Nao encontrou o instrumento que precisa calibrar? Fale com a nossa equipe, nos vamos encontrar a solucao adequada para o seu caso.",
+        authorityTitle: "Maior numero de acreditacoes CGCRE/INMETRO de capital nacional do Centro-Oeste!",
+        authorityText: "Desde 2008 garantindo a conformidade e seguranca em industrias, laboratorios de metrologia, saude e outros que necessitam de alta exatidao.",
+        authorityPoints: calibracaoAuthorityPoints,
+        formTitle: "Servico de calibracao para manter sua industria em conformidade",
+        formText: "Preencha os dados abaixo e nossa equipe tecnica entrara em contato em ate 24h uteis para entender sua demanda e elaborar proposta detalhada.",
+        benefitsTitle: "Por que gestores escolhem a Competec?",
+        benefitsText: "Quem vive da rotina de regulacao em laboratorios e industrias, sabe que nao da para contar com a sorte em auditorias e gestao da qualidade.",
+        finalCta: "Calibracao com rastreabilidade para sua proxima auditoria.",
+      }
+    : {
+        equipmentTitle: "Solucoes de usinagem para demandas criticas",
+        equipmentText: "Atuamos no desenvolvimento, recuperacao e producao de componentes industriais com precisao, repetibilidade e resposta tecnica.",
+        callout: "Tem uma peca critica, obsoleta ou uma demanda interna represada? Fale com a equipe tecnica para avaliar o melhor caminho.",
+        authorityTitle: "Estrutura tecnica para industrias que nao podem parar",
+        authorityText: "Mais de 25 anos transformando desafios de manutencao, producao e reposicao em componentes funcionais para operacoes industriais.",
+        authorityPoints: challenges.map((challenge) => `${challenge.title}: ${challenge.text}`),
+        formTitle: "Orcamento tecnico para usinagem, caldeiraria e componentes sob demanda",
+        formText: "Preencha os dados abaixo e nossa equipe entra em contato para entender desenho, amostra, criticidade, prazo e volume da sua demanda.",
+        benefitsTitle: "Por que industrias escolhem a Competec?",
+        benefitsText: "A Competec atua como extensao tecnica da sua operacao para reduzir dependencia de fornecedores, atrasos e paradas nao planejadas.",
+        finalCta: "Transforme demandas criticas em componentes prontos para operar.",
+      };
+
+  if (isSpecialLanding) {
+    return (
+      <main className="min-h-screen bg-white">
+        <Navbar />
+
+        <section
+          className="relative min-h-[680px] overflow-hidden bg-[#243640] bg-cover bg-center bg-no-repeat text-white"
+          style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
+        >
+          <div className="absolute inset-0 bg-[#243640]/72" />
+          <div className="relative z-10 mx-auto flex min-h-[680px] max-w-[1216px] flex-col justify-center px-6 pt-24">
+            <Link
+              href="/#services"
+              className="mb-8 inline-flex items-center text-sm font-bold text-white/70 transition-colors hover:text-[#E65100]"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para Solucoes
+            </Link>
+
+            <h1 className="max-w-[760px] text-[40px] font-bold leading-[1.05] lg:text-[58px]">
+              {heroTitle}
+            </h1>
+            <p className="mt-7 max-w-[620px] text-lg leading-relaxed text-gray-100">
+              {heroText}
+            </p>
+
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <a
+                href="#service-form"
+                className="inline-flex min-h-[54px] w-full max-w-[320px] items-center justify-center rounded-[3px] bg-[#E65100] px-6 text-sm font-bold uppercase text-white transition-all hover:bg-white hover:text-[#E65100]"
+              >
+                {service.cta_text || "Solicite orcamento agora"}
+              </a>
+              {proofItems.length > 0 && (
+                <p className="text-xs font-bold uppercase tracking-wide text-white/80">
+                  {proofItems.join(" | ")}
+                </p>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-white py-16 lg:py-24">
+          <div className="mx-auto max-w-[1216px] px-6">
+            <div className="mx-auto max-w-[880px] text-center">
+              <h2 className="text-[32px] font-bold leading-tight text-[#242424] lg:text-[46px]">
+                {landingCopy.equipmentTitle}
+              </h2>
+              <p className="mt-5 text-lg leading-relaxed text-[#52636B]">
+                {landingCopy.equipmentText}
+              </p>
+            </div>
+
+            <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {equipmentCategories.map((category) => (
+                <article
+                  key={category.title}
+                  className="flex min-h-[315px] flex-col justify-between border border-[#E0E4E7] bg-white p-6 shadow-sm"
+                >
+                  <div>
+                    <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-md bg-orange-50 text-[#E65100]">
+                      <Gauge size={22} />
+                    </div>
+                    <h3 className="text-2xl font-bold leading-tight text-[#243640]">
+                      {category.title}
+                    </h3>
+                    <ul className="mt-5 space-y-3">
+                      {category.items.map((item) => (
+                        <li key={item} className="flex gap-3 text-sm leading-relaxed text-[#52636B]">
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-[#E65100]" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <a
+                    href="#service-form"
+                    className="mt-6 inline-flex h-11 items-center justify-center rounded-[3px] bg-[#243640] px-5 text-xs font-bold uppercase text-white transition-colors hover:bg-[#E65100]"
+                  >
+                    {category.ctaText}
+                  </a>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-10 bg-[#F4F6F7] px-6 py-7 text-center">
+              <p className="mx-auto max-w-[820px] text-lg font-semibold leading-relaxed text-[#243640]">
+                {landingCopy.callout}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-[#243640] py-16 text-white lg:py-24">
+          <div className="mx-auto grid max-w-[1216px] grid-cols-1 gap-12 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <h2 className="text-[32px] font-bold leading-tight lg:text-[46px]">
+                {landingCopy.authorityTitle}
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-white/78">
+                {landingCopy.authorityText}
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
+              {landingCopy.authorityPoints.map((point) => (
+                <div key={point} className="flex gap-4 border border-white/12 bg-white/8 px-5 py-5">
+                  <ClipboardCheck className="mt-1 h-6 w-6 flex-none text-[#E65100]" />
+                  <p className="text-base leading-relaxed text-white/88">{point}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="service-form"
+          className="relative overflow-hidden bg-[#F4F6F7] py-16 lg:py-24"
+        >
+          <div className="mx-auto grid max-w-[1216px] grid-cols-1 gap-10 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+            <div className="pt-2">
+              <h2 className="text-[32px] font-bold leading-tight text-[#243640] lg:text-[44px]">
+                {landingCopy.formTitle}
+              </h2>
+              <p className="mt-5 text-lg leading-relaxed text-[#52636B]">
+                {landingCopy.formText}
+              </p>
+            </div>
+
+            <form
+              action={service.cta_link || "#"}
+              target="_blank"
+              className="bg-[#EB6338] px-6 py-8 shadow-xl sm:px-8 lg:px-10"
+            >
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <input name="nome" required placeholder="* Nome" className="h-12 rounded-md border border-white/30 bg-white px-3 text-sm text-[#243640] outline-none placeholder:text-[#8B98A0]" />
+                <input name="email" type="email" required placeholder="* E-mail" className="h-12 rounded-md border border-white/30 bg-white px-3 text-sm text-[#243640] outline-none placeholder:text-[#8B98A0]" />
+                <input name="telefone" type="tel" required placeholder="* Telefone/Whatsapp" className="h-12 rounded-md border border-white/30 bg-white px-3 text-sm text-[#243640] outline-none placeholder:text-[#8B98A0]" />
+                <input name="cidade" required placeholder="* Qual a sua cidade?" className="h-12 rounded-md border border-white/30 bg-white px-3 text-sm text-[#243640] outline-none placeholder:text-[#8B98A0]" />
+                <input name="empresa" placeholder="Empresa (Opcional)" className="h-12 rounded-md border border-white/30 bg-white px-3 text-sm text-[#243640] outline-none placeholder:text-[#8B98A0] sm:col-span-2" />
+                <textarea name="mensagem" placeholder="Mensagem (Opcional)" rows={6} className="min-h-[140px] resize-none rounded-md border border-white/30 bg-white px-3 py-3 text-sm text-[#243640] outline-none placeholder:text-[#8B98A0] sm:col-span-2" />
+              </div>
+              <button
+                type="submit"
+                className="mt-6 flex h-[54px] w-full items-center justify-center rounded-[3px] bg-[#243640] px-6 text-sm font-bold uppercase text-white transition-colors hover:bg-white hover:text-[#243640]"
+              >
+                Falar com Especialista Competec
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <section className="bg-white py-16 lg:py-24">
+          <div className="mx-auto max-w-[1216px] px-6">
+            <div className="max-w-[820px]">
+              <h2 className="text-[32px] font-bold leading-tight text-[#243640] lg:text-[46px]">
+                {landingCopy.benefitsTitle}
+              </h2>
+              <p className="mt-5 text-lg leading-relaxed text-[#52636B]">
+                {landingCopy.benefitsText}
+              </p>
+            </div>
+
+            <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
+              {benefitItems.map((benefit) => (
+                <article key={benefit.title} className="border border-[#E0E4E7] bg-white p-6 shadow-sm">
+                  <h3 className="text-xl font-bold leading-tight text-[#243640]">
+                    {benefit.title}
+                  </h3>
+                  <p className="mt-3 text-base leading-relaxed text-[#52636B]">
+                    {benefit.text}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-10">
+              <a
+                href="#service-form"
+                className="inline-flex h-[52px] w-full max-w-[300px] items-center justify-center rounded-[3px] bg-[#E65100] px-6 text-sm font-bold uppercase text-white transition-colors hover:bg-[#243640]"
+              >
+                {service.cta_text || "Solicite orcamento agora"}
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {faqItems.length > 0 && (
+        <section className="bg-[#F4F6F7] py-16 lg:py-24">
+          <div className="mx-auto max-w-[960px] px-6">
+            <h2 className="text-center text-[32px] font-bold leading-tight text-[#243640] lg:text-[46px]">
+              Perguntas Frequentes
+            </h2>
+
+            <div className="mt-10 divide-y divide-[#DCE2E6] border-y border-[#DCE2E6]">
+              {faqItems.map((faq) => (
+                <details key={faq.question} className="group py-5">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-left text-lg font-bold leading-tight text-[#243640]">
+                    {faq.question}
+                    <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-white text-[#E65100] transition-transform group-open:rotate-45">
+                      +
+                    </span>
+                  </summary>
+                  <p className="mt-4 max-w-[820px] text-base leading-relaxed text-[#52636B]">
+                    {faq.answer}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+        )}
+
+        <section className="bg-[#243640] py-16 text-center text-white">
+          <div className="mx-auto max-w-4xl px-6">
+            <h2 className="text-3xl font-bold leading-tight lg:text-5xl">
+              {landingCopy.finalCta}
+            </h2>
+            <a
+              href="#service-form"
+              className="mt-8 inline-flex h-[52px] items-center justify-center rounded-[3px] bg-[#E65100] px-8 text-sm font-bold uppercase text-white transition-colors hover:bg-white hover:text-[#E65100]"
+            >
+              {service.cta_text || "Solicite orcamento agora"}
+            </a>
+          </div>
+        </section>
+
+        {footer && <Footer data={footer} />}
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-white">
@@ -314,7 +808,7 @@ export default async function ServiceInternalPage({
                 >
                   <div
                     className="relative h-[180px] w-full bg-[#E7EAED] bg-cover bg-center bg-no-repeat"
-                    style={{ backgroundImage: `url(${getUsinagemCardImage(index)})` }}
+                    style={{ backgroundImage: `url(${getSpecialServiceCardImage(specialMediaSlug, index)})` }}
                     aria-label={item}
                   >
                     <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#2C3E50]/60 to-transparent" />
@@ -450,11 +944,11 @@ export default async function ServiceInternalPage({
             </h2>
 
             <div className="mt-12 grid grid-cols-1 overflow-hidden sm:grid-cols-2 lg:grid-cols-3">
-              {usinagemGalleryItems.map((item, index) => (
+              {galleryItems.map((item, index) => (
                 <div
                   key={item}
                   className="min-h-[238px] bg-cover bg-center bg-no-repeat"
-                  style={{ backgroundImage: `url(${getUsinagemGalleryImage(index)})` }}
+                  style={{ backgroundImage: `url(${getSpecialServiceGalleryImage(specialMediaSlug, index)})` }}
                   aria-label={item}
                 />
               ))}
@@ -475,8 +969,8 @@ export default async function ServiceInternalPage({
           <div className="relative z-10 mx-auto grid min-h-[608px] max-w-[1216px] grid-cols-1 items-end gap-10 px-6 pt-16 lg:grid-cols-[0.82fr_1fr] lg:gap-12 lg:pt-0">
             <div className="relative order-2 h-[440px] lg:order-1 lg:h-[608px]">
               <Image
-                src={`${getApiUrl()}/media/services/usinagem-b/desafios-operador.png`}
-                alt="Gestor industrial analisando desafios de produção"
+                src={`${getApiUrl()}/media/services/${specialMediaSlug}/desafios-operador.png`}
+                alt={challengesImageAlt}
                 fill
                 className="object-contain object-bottom"
                 unoptimized
@@ -489,7 +983,7 @@ export default async function ServiceInternalPage({
               </h2>
 
               <div className="mt-7 flex max-w-[589px] flex-col gap-2.5">
-                {usinagemChallenges.map((challenge) => (
+                {challenges.map((challenge) => (
                   <article
                     key={challenge.title}
                     className="rounded-md bg-white px-6 py-3 text-[#242424] shadow-sm"
@@ -527,7 +1021,7 @@ export default async function ServiceInternalPage({
 
           <div className="relative z-10 mx-auto max-w-[960px] px-6">
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-[130px]">
-              {usinagemCapabilityColumns.map((column) => (
+              {capabilityColumns.map((column) => (
                 <div key={column.title}>
                   <h2 className="whitespace-pre-line text-[32px] font-bold uppercase leading-[1.02] text-[#1C2A30] lg:text-[40px]">
                     {column.title}
