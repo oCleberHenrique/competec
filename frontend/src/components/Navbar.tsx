@@ -10,6 +10,7 @@ import { getApiUrl, getImageUrl } from "@/lib/utils";
 interface NavService {
   title: string;
   slug: string;
+  icon: string | null;
 }
 
 export function Navbar() {
@@ -94,15 +95,28 @@ export function Navbar() {
               </Link>
 
               {services.length > 0 && (
-                <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-72 -translate-x-1/2 rounded-xl border border-white/10 bg-[#2C3E50] p-3 opacity-0 shadow-2xl transition-all group-hover:visible group-hover:opacity-100">
+                <div className="invisible absolute left-1/2 top-full z-50 mt-4 grid w-[380px] -translate-x-1/2 grid-cols-2 gap-3 rounded-xl border border-white/10 bg-[#2C3E50] p-3 opacity-0 shadow-2xl transition-all group-hover:visible group-hover:opacity-100">
                   <div className="absolute -top-4 left-0 h-4 w-full" />
                   {services.map((service) => (
                     <Link
                       key={service.slug}
                       href={getServiceHref(service.slug)}
-                      className="block rounded-lg px-4 py-3 text-sm font-bold text-gray-100 transition-colors hover:bg-white/10 hover:text-[#E65100]"
+                      className="flex flex-col overflow-hidden rounded-lg bg-white/5 transition-colors hover:bg-white/10"
                     >
-                      {service.title}
+                      {service.icon && (
+                        <div className="relative h-20 w-full">
+                          <Image
+                            src={getImageUrl(service.icon)}
+                            alt={service.title}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        </div>
+                      )}
+                      <span className="px-3 py-2 text-sm font-bold text-gray-100 transition-colors hover:text-[#E65100]">
+                        {service.title}
+                      </span>
                     </Link>
                   ))}
                 </div>

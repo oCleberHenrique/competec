@@ -138,7 +138,13 @@ class Service(models.Model):
     title = models.CharField("Título", max_length=200)
     slug = models.SlugField("Slug (URL)", unique=True, blank=True, null=True)
     short_description = models.TextField("Descrição Curta (Card)")
-    icon = models.ImageField("Ícone/Imagem", upload_to="services/", blank=True, null=True)
+    icon = models.ImageField(
+        "Ícone/Imagem",
+        upload_to="services/",
+        blank=True,
+        null=True,
+        help_text="Aparece no card do serviço na Home e na imagem do menu Soluções (dropdown).",
+    )
 
     # Campos da Página Interna
     internal_subtitle = models.CharField("Subtítulo Interno", max_length=200, blank=True, null=True)
@@ -339,9 +345,17 @@ class NavbarConfig(models.Model):
     instagram_link = models.URLField(blank=True, null=True, verbose_name="Instagram")
     linkedin_link = models.URLField(blank=True, null=True, verbose_name="LinkedIn")
 
+    floating_whatsapp_link = models.CharField(
+        "Link do WhatsApp (Botão Flutuante)",
+        max_length=200,
+        blank=True,
+        default="https://wa.me/5562995530750",
+        help_text="Link do botãozinho verde de WhatsApp que fica fixo no canto da tela em todas as páginas. Formato: https://wa.me/55DDDNUMERO",
+    )
+
     class Meta:
-        verbose_name = "Configuração do Navbar (Logo)"
-        verbose_name_plural = "Configuração do Navbar (Logo)"
+        verbose_name = "Configurações Gerais (Logo, WhatsApp e Redes Sociais)"
+        verbose_name_plural = "Configurações Gerais (Logo, WhatsApp e Redes Sociais)"
 
     def __str__(self):
         return "Configuração Principal do Navbar"

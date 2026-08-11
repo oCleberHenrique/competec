@@ -143,7 +143,13 @@ class InformationPageAdmin(ModelAdmin):
 @admin.register(NavbarConfig)
 class NavbarConfigAdmin(admin.ModelAdmin):
     list_display = ('id', 'alt_text')
-    
+
+    fieldsets = (
+        ("Logo", {"fields": ("logo", "alt_text")}),
+        ("WhatsApp Flutuante", {"fields": ("floating_whatsapp_link",)}),
+        ("Redes Sociais", {"fields": ("facebook_link", "instagram_link", "linkedin_link")}),
+    )
+
     # Isso impede que criem mais de uma configuração (Trava para ter apenas 1 logo)
     def has_add_permission(self, request):
         if self.model.objects.exists():
