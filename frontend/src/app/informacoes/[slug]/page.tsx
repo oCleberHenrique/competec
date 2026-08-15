@@ -190,7 +190,7 @@ export default function InformationPage() {
 
             <div className="bg-gradient-to-br from-[#E65100] to-[#bf4300] p-8 rounded-xl text-white shadow-lg text-center">
                 <h3 className="text-xl font-bold mb-3">{page.cta_title}</h3>
-                <Link href={page.cta_link || "#"} className="block w-full bg-white text-[#E65100] font-bold py-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all">
+                <Link href={page.cta_link || "https://wa.me/5562995530750"} target="_blank" className="block w-full bg-white text-[#E65100] font-bold py-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all">
                     Entrar em Contato
                 </Link>
             </div>

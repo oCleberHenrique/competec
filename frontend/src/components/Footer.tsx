@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Phone, Mail, Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
+import { Phone, Mail, Instagram, Linkedin } from "lucide-react";
 import { getImageUrl } from "@/lib/utils"; // <--- IMPORTAMOS A FUNÇÃO AQUI
 
 // --- ÍCONE CUSTOMIZADO DO WHATSAPP (SVG) ---
@@ -35,10 +35,8 @@ interface FooterData {
   whatsapp: string;
   whatsapp_2: string;
   email: string;
-  facebook: string;
   instagram: string;
-  youtube: string;
-  linkedin: string; 
+  linkedin: string;
   copyright_text: string;
 }
 
@@ -53,7 +51,7 @@ export function Footer({ data }: FooterProps) {
   const logoUrl = getImageUrl(data.logo);
 
   return (
-    <footer className="w-full bg-[#2C3E50] text-white">
+    <footer id="contact" className="w-full bg-[#2C3E50] text-white">
       <div className="mx-auto max-w-[1216px] px-6 py-16 lg:py-20">
         <div className="flex flex-col gap-12 lg:flex-row lg:justify-between">
           
@@ -130,16 +128,6 @@ export function Footer({ data }: FooterProps) {
           <div className="flex flex-col gap-6 lg:items-end">
             <div className="flex gap-4">
               
-              {data.facebook && (
-                <Link 
-                  href={data.facebook} 
-                  target="_blank"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E65100] text-[#E65100] transition-all hover:bg-[#E65100] hover:text-white"
-                >
-                  <Facebook size={20} />
-                </Link>
-              )}
-
               {data.instagram && (
                 <Link 
                   href={data.instagram} 
@@ -157,16 +145,6 @@ export function Footer({ data }: FooterProps) {
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E65100] text-[#E65100] transition-all hover:bg-[#E65100] hover:text-white"
                 >
                   <Linkedin size={20} />
-                </Link>
-              )}
-
-              {data.youtube && (
-                <Link 
-                  href={data.youtube} 
-                  target="_blank"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E65100] text-[#E65100] transition-all hover:bg-[#E65100] hover:text-white"
-                >
-                  <Youtube size={20} />
                 </Link>
               )}
 

@@ -36,7 +36,7 @@ class AboutSection(models.Model):
 
     # --- CTA ---
     cta_text = models.CharField("Texto do Botão", max_length=50, default="Entre em Contato")
-    cta_link = models.CharField("Link do WhatsApp", max_length=200, default="https://wa.me/...")
+    cta_link = models.CharField("Link do WhatsApp", max_length=200, default="https://wa.me/5562995530750")
 
     is_active = models.BooleanField("Ativo?", default=True)
 
@@ -287,9 +287,7 @@ class FooterConfig(models.Model):
     whatsapp_2 = models.CharField("WhatsApp Secundário", max_length=50, blank=True)
     email = models.CharField("Email", max_length=100, blank=True)
 
-    facebook = models.URLField("Facebook", blank=True)
     instagram = models.URLField("Instagram", blank=True)
-    youtube = models.URLField("Youtube", blank=True)
     linkedin = models.URLField("Linkedin", blank=True)
 
     copyright_text = models.CharField("Texto Direitos Autorais", max_length=200, default="Todos os direitos reservados...")
@@ -316,7 +314,7 @@ class InformationPage(models.Model):
     )
 
     cta_title = models.CharField("Título CTA", max_length=100, default="Entre em contato")
-    cta_link = models.CharField("Link do Botão", max_length=200, default="#contato")
+    cta_link = models.CharField("Link do Botão", max_length=200, default="https://wa.me/5562995530750")
     is_active = models.BooleanField("Ativo?", default=True)
 
     class Meta:

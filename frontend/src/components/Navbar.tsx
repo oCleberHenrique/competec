@@ -133,7 +133,7 @@ export function Navbar() {
               </Link>
             ))}
 
-            <Link href="/#contact">
+            <Link href="#contact">
               <Button className="border-2 border-white bg-transparent text-white font-bold rounded-lg transition-all hover:bg-white hover:text-[#E65100] hover:border-white">
                 CONTATO
               </Button>
@@ -200,7 +200,7 @@ export function Navbar() {
               </Link>
             ))}
 
-            <Link href="/#contact" onClick={() => setIsOpen(false)}>
+            <Link href="#contact" onClick={() => setIsOpen(false)}>
               <Button className="w-full bg-[#E65100] hover:bg-[#bf4300] text-white font-bold mt-2">
                 FALE CONOSCO
               </Button>

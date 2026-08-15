@@ -347,7 +347,7 @@ export default function AboutPage() {
                 Pronto para transformar sua indústria?
             </h2>
             <Link
-                href={about.cta_link || "/contato"}
+                href={about.cta_link || "https://wa.me/5562995530750"}
                 target="_blank"
                 className="inline-flex items-center justify-center rounded-lg bg-[#E65100] px-10 py-4 text-lg font-bold text-white transition-all hover:bg-white hover:text-[#E65100]"
             >
