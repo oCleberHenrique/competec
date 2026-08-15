@@ -5,7 +5,7 @@ class HeroSection(models.Model):
     title = models.CharField("Título (H1)", max_length=200, help_text="Ex: Usinagem de Precisão")
     subtitle = models.TextField("Subtítulo (H4)", help_text="Ex: Soluções para Indústria 4.0")
     cta_text = models.CharField("Texto do Botão", max_length=50, default="Fale Conosco")
-    cta_link = models.CharField("Link do Botão", max_length=200, default="#contato")
+    cta_link = models.CharField("Link do Botão", max_length=200, default="#services")
     image = models.ImageField("Imagem Principal", upload_to="hero/")
     is_active = models.BooleanField("Ativo?", default=True)
 
