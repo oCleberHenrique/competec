@@ -13,7 +13,7 @@ interface TestimonialItem {
   name: string;
   role: string;
   text: string;
-  image: string;
+  image: string | null;
   rating: number;
 }
 
@@ -118,14 +118,20 @@ export function Testimonials({ items, section }: TestimonialsProps) {
                           <div>
                             <div className="my-4 h-[1px] w-full bg-[#EDEDED]"></div>
                             <div className="flex items-center gap-4">
-                              <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full">
-                                <Image 
-                                  src={getImageUrl(item.image)} // <--- CORRIGIDO: item.image
-                                  alt={item.name}
-                                  fill
-                                  className="object-cover"
-                                  unoptimized
-                                />
+                              <div className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#E65100]/10">
+                                {item.image ? (
+                                  <Image
+                                    src={getImageUrl(item.image)}
+                                    alt={item.name}
+                                    fill
+                                    className="object-cover"
+                                    unoptimized
+                                  />
+                                ) : (
+                                  <span className="text-sm font-bold text-[#E65100]">
+                                    {item.name.charAt(0).toUpperCase()}
+                                  </span>
+                                )}
                               </div>
 
                               <div>

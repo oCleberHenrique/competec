@@ -218,7 +218,7 @@ class Testimonial(models.Model):
     name = models.CharField("Nome da Pessoa", max_length=100)
     role = models.CharField("Cargo/Empresa (Opcional)", max_length=100, blank=True)
     text = models.TextField("Depoimento")
-    image = models.ImageField("Foto do Perfil", upload_to="testimonials/")
+    image = models.ImageField("Foto do Perfil", upload_to="testimonials/", blank=True, null=True)
     rating = models.IntegerField("Estrelas (1-5)", default=5)
     order = models.PositiveIntegerField("Ordem", default=0)
 

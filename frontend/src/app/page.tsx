@@ -66,7 +66,7 @@ interface HomeData {
     name: string;
     role: string;
     text: string;
-    image: string;
+    image: string | null;
     rating: number;
   }>;
 
