@@ -12,7 +12,7 @@ from .models import (
     AboutSection, AboutGalleryImage, AboutValueCard,
     Differentiator, DifferentiatorsSection,
     NavbarConfig,
-    Service, ServiceBenefit, ServiceEquipmentCategory, ServiceFAQ, ServiceGalleryImage, ServicesSection,
+    Service, ServiceBenefit, ServiceEquipmentCategory, ServiceFAQ, ServiceGalleryImage, ServiceAuthorityPoint, ServicesSection,
     HistorySection,
     Partner, PartnersSection,
     Testimonial, TestimonialsSection,
@@ -99,9 +99,14 @@ class ServiceFAQInline(TabularInline):
     extra = 1
     tab = True
 
+class ServiceAuthorityPointInline(TabularInline):
+    model = ServiceAuthorityPoint
+    extra = 1
+    tab = True
+
 @admin.register(Service)
 class ServiceAdmin(ModelAdmin):
-    list_display = ["title", "slug", "order", "is_active"]
+    list_display = ["title", "slug", "use_landing_template", "order", "is_active"]
     list_editable = ["order"]
     search_fields = ["title", "slug"]
     prepopulated_fields = {"slug": ("title",)}
@@ -110,7 +115,36 @@ class ServiceAdmin(ModelAdmin):
         ServiceEquipmentCategoryInline,
         ServiceBenefitInline,
         ServiceFAQInline,
+        ServiceAuthorityPointInline,
     ]
+    fieldsets = (
+        ("Card (Home)", {"fields": ("title", "slug", "short_description", "icon", "order", "is_active")}),
+        ("Página Interna", {"fields": ("internal_subtitle", "internal_text", "internal_image", "rich_text", "regions_served")}),
+        ("CTA", {"fields": ("cta_text", "cta_link")}),
+        (
+            "Landing Page Especial (Great Pages)",
+            {
+                "classes": ("collapse",),
+                "description": (
+                    "Só usado quando \"Usar layout de Landing Page?\" está ativado. "
+                    "Os Pontos de Autoridade (boxes de confiança abaixo do hero) ficam na aba \"Ponto de Autoridade\" abaixo."
+                ),
+                "fields": (
+                    "use_landing_template",
+                    "landing_equipment_title",
+                    "landing_equipment_text",
+                    "landing_callout",
+                    "landing_authority_title",
+                    "landing_authority_text",
+                    "landing_form_title",
+                    "landing_form_text",
+                    "landing_benefits_title",
+                    "landing_benefits_text",
+                    "landing_final_cta",
+                ),
+            },
+        ),
+    )
 
 # --- 5. SERVIÇOS (CAPA) ---
 @admin.register(ServicesSection)

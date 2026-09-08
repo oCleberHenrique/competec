@@ -3,7 +3,7 @@ from .models import (
     BlogSection, FooterConfig, AboutGalleryImage, AboutValueCard,
     HeroSection, AboutSection, Differentiator, DifferentiatorsSection, HistorySection,
     InformationGalleryImage, InformationPage, Partner, PartnersSection, Service, ServiceBenefit,
-    ServiceEquipmentCategory, ServiceFAQ, ServiceGalleryImage,
+    ServiceEquipmentCategory, ServiceFAQ, ServiceGalleryImage, ServiceAuthorityPoint,
     ServicesSection, Testimonial, TestimonialsSection, BlogPost, NavbarConfig
 )
 
@@ -75,6 +75,11 @@ class ServiceFAQSerializer(serializers.ModelSerializer):
         model = ServiceFAQ
         fields = ["id", "question", "answer", "order"]
 
+class ServiceAuthorityPointSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceAuthorityPoint
+        fields = ["id", "description", "order"]
+
 # --- 2. Serializador dos CARDS
 class ServiceSerializer(serializers.ModelSerializer):
     description = serializers.CharField(source="short_description", read_only=True)
@@ -82,14 +87,19 @@ class ServiceSerializer(serializers.ModelSerializer):
     equipment_categories = ServiceEquipmentCategorySerializer(many=True, read_only=True)
     benefits = ServiceBenefitSerializer(many=True, read_only=True)
     faqs = ServiceFAQSerializer(many=True, read_only=True)
+    authority_points = ServiceAuthorityPointSerializer(many=True, read_only=True)
 
     class Meta:
         model = Service
         fields = [
-            "id", "title", "description", "icon", "slug", 
+            "id", "title", "description", "icon", "slug",
             "internal_subtitle", "internal_text", "internal_image", "rich_text",
             "regions_served", "cta_text", "cta_link", "gallery",
-            "equipment_categories", "benefits", "faqs"
+            "equipment_categories", "benefits", "faqs", "authority_points",
+            "use_landing_template", "landing_equipment_title", "landing_equipment_text",
+            "landing_callout", "landing_authority_title", "landing_authority_text",
+            "landing_form_title", "landing_form_text", "landing_benefits_title",
+            "landing_benefits_text", "landing_final_cta",
         ]
 
 class HistorySectionSerializer(serializers.ModelSerializer):

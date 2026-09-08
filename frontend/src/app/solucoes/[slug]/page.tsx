@@ -46,6 +46,22 @@ interface ServiceData {
     question: string;
     answer: string;
   }>;
+  authority_points?: Array<{
+    id: number;
+    description: string;
+    order: number;
+  }>;
+  use_landing_template?: boolean;
+  landing_equipment_title?: string;
+  landing_equipment_text?: string;
+  landing_callout?: string;
+  landing_authority_title?: string;
+  landing_authority_text?: string;
+  landing_form_title?: string;
+  landing_form_text?: string;
+  landing_benefits_title?: string;
+  landing_benefits_text?: string;
+  landing_final_cta?: string;
 }
 
 interface PageData {
@@ -383,13 +399,19 @@ export default async function ServiceInternalPage({
   const imageUrl = service.internal_image ? getImageUrl(service.internal_image) : null;
   const heroTitle = service.internal_subtitle || service.title;
   const heroText = service.internal_text || "Descrição detalhada em breve.";
-  const challenges = service.slug === "calibracao" ? calibracaoChallenges : usinagemChallenges;
   const capabilityColumns = service.slug === "calibracao" ? calibracaoCapabilityColumns : usinagemCapabilityColumns;
   const parsed = parseRichText(service.rich_text);
   const proofItems = service.regions_served
     ? service.regions_served.split(/[;\n]+/).map((item) => item.trim()).filter(Boolean)
     : [];
-  const isSpecialLanding = service.slug === "calibracao" || service.slug === "usinagem-b";
+  // O admin controla via "Usar layout de Landing Page?" no cadastro do serviço.
+  // Mantemos o fallback por slug só como rede de segurança para conteúdo antigo.
+  const isSpecialLanding = service.use_landing_template ?? (service.slug === "calibracao" || service.slug === "usinagem-b");
+
+  // "challenges" não tem seção própria na landing page: só alimenta o texto
+  // padrão dos Pontos de Autoridade quando o admin ainda não editou nenhum.
+  const challenges = service.slug === "calibracao" ? calibracaoChallenges : usinagemChallenges;
+
   const equipmentCategories = service.equipment_categories?.length
     ? service.equipment_categories.map((category) => ({
         title: category.title,
@@ -418,14 +440,14 @@ export default async function ServiceInternalPage({
           text: card.text,
         })));
   const faqItems = service.faqs?.length ? service.faqs : service.slug === "calibracao" ? calibracaoFaqs : [];
-  const landingCopy = service.slug === "calibracao"
+
+  const fallbackLandingCopy = service.slug === "calibracao"
     ? {
         equipmentTitle: "Quais sao os equipamentos e instrumentos que calibramos?",
         equipmentText: "Temos um escopo amplo para atender as industrias, desde calibracoes com padroes certificados ate RBC em nosso laboratorio proprio.",
         callout: "Nao encontrou o instrumento que precisa calibrar? Fale com a nossa equipe, nos vamos encontrar a solucao adequada para o seu caso.",
         authorityTitle: "Maior numero de acreditacoes CGCRE/INMETRO de capital nacional do Centro-Oeste!",
         authorityText: "Desde 2008 garantindo a conformidade e seguranca em industrias, laboratorios de metrologia, saude e outros que necessitam de alta exatidao.",
-        authorityPoints: calibracaoAuthorityPoints,
         formTitle: "Servico de calibracao para manter sua industria em conformidade",
         formText: "Preencha os dados abaixo e nossa equipe tecnica entrara em contato em ate 24h uteis para entender sua demanda e elaborar proposta detalhada.",
         benefitsTitle: "Por que gestores escolhem a Competec?",
@@ -438,13 +460,31 @@ export default async function ServiceInternalPage({
         callout: "Tem uma peca critica, obsoleta ou uma demanda interna represada? Fale com a equipe tecnica para avaliar o melhor caminho.",
         authorityTitle: "Estrutura tecnica para industrias que nao podem parar",
         authorityText: "Mais de 25 anos transformando desafios de manutencao, producao e reposicao em componentes funcionais para operacoes industriais.",
-        authorityPoints: challenges.map((challenge) => `${challenge.title}: ${challenge.text}`),
         formTitle: "Orcamento tecnico para usinagem, caldeiraria e componentes sob demanda",
         formText: "Preencha os dados abaixo e nossa equipe entra em contato para entender desenho, amostra, criticidade, prazo e volume da sua demanda.",
         benefitsTitle: "Por que industrias escolhem a Competec?",
         benefitsText: "A Competec atua como extensao tecnica da sua operacao para reduzir dependencia de fornecedores, atrasos e paradas nao planejadas.",
         finalCta: "Transforme demandas criticas em componentes prontos para operar.",
       };
+  const fallbackAuthorityPoints = service.slug === "calibracao"
+    ? calibracaoAuthorityPoints
+    : challenges.map((challenge) => `${challenge.title}: ${challenge.text}`);
+
+  const landingCopy = {
+    equipmentTitle: service.landing_equipment_title || fallbackLandingCopy.equipmentTitle,
+    equipmentText: service.landing_equipment_text || fallbackLandingCopy.equipmentText,
+    callout: service.landing_callout || fallbackLandingCopy.callout,
+    authorityTitle: service.landing_authority_title || fallbackLandingCopy.authorityTitle,
+    authorityText: service.landing_authority_text || fallbackLandingCopy.authorityText,
+    authorityPoints: service.authority_points?.length
+      ? service.authority_points.map((point) => point.description)
+      : fallbackAuthorityPoints,
+    formTitle: service.landing_form_title || fallbackLandingCopy.formTitle,
+    formText: service.landing_form_text || fallbackLandingCopy.formText,
+    benefitsTitle: service.landing_benefits_title || fallbackLandingCopy.benefitsTitle,
+    benefitsText: service.landing_benefits_text || fallbackLandingCopy.benefitsText,
+    finalCta: service.landing_final_cta || fallbackLandingCopy.finalCta,
+  };
 
   if (isSpecialLanding) {
     return (

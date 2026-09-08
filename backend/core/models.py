@@ -162,6 +162,21 @@ class ServiceFAQ(models.Model):
     def __str__(self):
         return self.question
 
+class ServiceAuthorityPoint(models.Model):
+    service = models.ForeignKey('Service', related_name="authority_points", on_delete=models.CASCADE)
+    description = models.TextField(
+        "Texto", help_text="Aparece nos boxes de confiança logo abaixo do hero da landing page."
+    )
+    order = models.PositiveIntegerField("Ordem", default=0)
+
+    class Meta:
+        verbose_name = "Ponto de Autoridade (Landing Page)"
+        verbose_name_plural = "Pontos de Autoridade (Landing Page)"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.description[:50]
+
 class Service(models.Model):
     # Campos do Card (Home)
     title = models.CharField("Título", max_length=200)
@@ -186,6 +201,29 @@ class Service(models.Model):
 
     cta_text = models.CharField("Texto do Botão", max_length=50, default="Falar com Especialista")
     cta_link = models.CharField("Link do Botão", max_length=200, blank=True, null=True)
+
+    # --- LANDING PAGE ESPECIAL (Great Pages) ---
+    use_landing_template = models.BooleanField(
+        "Usar layout de Landing Page?", default=False,
+        help_text=(
+            "Ative para usar o layout de landing page com formulário de captura "
+            "(usado hoje em Calibração e Usinagem). Deixe desativado para o layout padrão de serviço."
+        ),
+    )
+    landing_equipment_title = models.CharField(
+        "Título da seção de equipamentos/soluções", max_length=200, blank=True
+    )
+    landing_equipment_text = models.TextField("Texto da seção de equipamentos/soluções", blank=True)
+    landing_callout = models.TextField(
+        "Texto de destaque (caixa cinza abaixo das categorias)", blank=True
+    )
+    landing_authority_title = models.CharField("Título da seção de autoridade/confiança", max_length=200, blank=True)
+    landing_authority_text = models.TextField("Texto da seção de autoridade/confiança", blank=True)
+    landing_form_title = models.CharField("Título acima do formulário", max_length=200, blank=True)
+    landing_form_text = models.TextField("Texto acima do formulário", blank=True)
+    landing_benefits_title = models.CharField("Título da seção de benefícios", max_length=200, blank=True)
+    landing_benefits_text = models.TextField("Texto da seção de benefícios", blank=True)
+    landing_final_cta = models.CharField("Título da faixa final (chamada de fechamento)", max_length=200, blank=True)
 
     order = models.IntegerField("Ordem de Exibição", default=0)
     is_active = models.BooleanField("Ativo?", default=True)
