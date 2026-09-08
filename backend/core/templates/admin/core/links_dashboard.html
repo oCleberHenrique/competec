@@ -8,6 +8,44 @@
 {% endblock %}
 
 {% block content %}
+  <style>
+    /*
+      O Unfold reseta todo <input type=text> com:
+      background-color:#0000!important; border-style:none!important
+      (seletor input[type=text], mais especifico que uma classe Tailwind
+      isolada). Por isso miramos exatamente esse nivel de especificidade
+      aqui, em vez de depender de utility classes.
+    */
+    input.cta-field[type=text] {
+      background-color: #f8fafc !important;
+      border: 1px solid #cbd5e1 !important;
+      color: #0f172a !important;
+      border-radius: 6px !important;
+      padding: 8px 12px !important;
+      width: 100%;
+      font-size: 0.875rem;
+      transition: border-color .15s, background-color .15s, box-shadow .15s;
+    }
+    input.cta-field[type=text]::placeholder {
+      color: #94a3b8 !important;
+    }
+    input.cta-field[type=text]:where(.dark, .dark *),
+    .dark input.cta-field[type=text] {
+      background-color: #1e293b !important;
+      border-color: #475569 !important;
+      color: #f1f5f9 !important;
+    }
+    input.cta-field[type=text]:where(.dark, .dark *)::placeholder,
+    .dark input.cta-field[type=text]::placeholder {
+      color: #64748b !important;
+    }
+    input.cta-field[type=text]:focus {
+      outline: none !important;
+      border-color: #E65100 !important;
+      box-shadow: 0 0 0 2px rgba(230, 81, 0, .35) !important;
+    }
+  </style>
+
   {% include "unfold/helpers/messages.html" %}
 
   <div class="flex flex-col gap-8 max-w-5xl mx-auto pb-16">
