@@ -13,11 +13,17 @@ interface PartnerItem {
   logo: string;
 }
 
-interface PartnersProps {
-  data: PartnerItem[];
+interface PartnersSectionData {
+  tag: string;
+  title: string;
 }
 
-export function Partners({ data }: PartnersProps) {
+interface PartnersProps {
+  data: PartnerItem[];
+  section?: PartnersSectionData | null;
+}
+
+export function Partners({ data, section }: PartnersProps) {
   // 1. Hooks primeiro
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" }, [
     Autoplay({ delay: 3000, stopOnInteraction: false }),
@@ -41,11 +47,10 @@ export function Partners({ data }: PartnersProps) {
         {/* CABEÇALHO */}
         <div className="mb-12">
           <span className="text-sm font-bold uppercase text-[#E65100]">
-            Cases
+            {section?.tag || "Cases"}
           </span>
-          <h2 className="mt-2 text-3xl font-bold leading-tight text-[#2C3E50] lg:text-4xl">
-            Transformando desafios<br />
-            em cases de sucesso.
+          <h2 className="mt-2 whitespace-pre-line text-3xl font-bold leading-tight text-[#2C3E50] lg:text-4xl">
+            {section?.title || "Transformando desafios\nem cases de sucesso."}
           </h2>
         </div>
 

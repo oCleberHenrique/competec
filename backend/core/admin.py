@@ -8,15 +8,15 @@ from .admin_links import links_dashboard_view
 
 # Importe TODOS os seus models
 from .models import (
-    HeroSection, 
+    HeroSection,
     AboutSection, AboutGalleryImage, AboutValueCard,
-    Differentiator,
-    NavbarConfig, 
-    Service, ServiceBenefit, ServiceEquipmentCategory, ServiceFAQ, ServiceGalleryImage, ServicesSection, 
-    HistorySection, 
-    Partner, 
-    Testimonial, TestimonialsSection, 
-    BlogSection, BlogPost, 
+    Differentiator, DifferentiatorsSection,
+    NavbarConfig,
+    Service, ServiceBenefit, ServiceEquipmentCategory, ServiceFAQ, ServiceGalleryImage, ServicesSection,
+    HistorySection,
+    Partner, PartnersSection,
+    Testimonial, TestimonialsSection,
+    BlogSection, BlogPost,
     FooterConfig,
     InformationPage, InformationGalleryImage # <--- Novos models de Informações
 )
@@ -48,8 +48,31 @@ class AboutValueCardInline(TabularInline):
 class AboutSectionAdmin(ModelAdmin):
     list_display = ["title", "is_active"]
     inlines = [AboutGalleryInline, AboutValueCardInline]
+    fieldsets = (
+        ("Home & Geral", {"fields": ("title", "text", "image")}),
+        ("Exclusivo Interna", {"fields": ("internal_image", "internal_text", "banner_image", "tag", "subtitle")}),
+        ("Mídia", {"fields": ("youtube_video_id", "map_embed_url")}),
+        ("CTA", {"fields": ("cta_text", "cta_link")}),
+        (
+            "Títulos de Seção (Página Interna)",
+            {
+                "fields": (
+                    "history_section_tag",
+                    "history_section_title",
+                    "differentiators_section_title",
+                    "gallery_section_title",
+                    "partners_section_title",
+                )
+            },
+        ),
+        ("Status", {"fields": ("is_active",)}),
+    )
 
 # --- 3. DIFERENCIAIS ---
+@admin.register(DifferentiatorsSection)
+class DifferentiatorsSectionAdmin(ModelAdmin):
+    list_display = ["title", "is_active"]
+
 @admin.register(Differentiator)
 class DifferentiatorAdmin(ModelAdmin):
     list_display = ["title", "order", "is_highlighted"]
@@ -100,6 +123,10 @@ class HistorySectionAdmin(ModelAdmin):
     list_display = ["title", "is_active"]
 
 # --- 7. PARCEIROS ---
+@admin.register(PartnersSection)
+class PartnersSectionAdmin(ModelAdmin):
+    list_display = ["title", "is_active"]
+
 @admin.register(Partner)
 class PartnerAdmin(ModelAdmin):
     list_display = ["name", "order"]
@@ -122,7 +149,7 @@ class BlogSectionAdmin(ModelAdmin):
 
 @admin.register(BlogPost)
 class BlogPostAdmin(ModelAdmin):
-    list_display = ["title", "date", "order"]
+    list_display = ["title", "category", "date", "order"]
     list_editable = ["order"]
     prepopulated_fields = {"slug": ("title",)} # Preenche slug automático
 
@@ -150,6 +177,7 @@ class NavbarConfigAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Logo", {"fields": ("logo", "alt_text")}),
         ("WhatsApp Flutuante", {"fields": ("floating_whatsapp_link",)}),
+        ("SEO (Google e Compartilhamento)", {"fields": ("seo_title", "seo_description")}),
     )
 
     # Isso impede que criem mais de uma configuração (Trava para ter apenas 1 logo)

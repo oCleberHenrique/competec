@@ -79,6 +79,11 @@ interface AboutData {
     map_embed_url: string;
     cta_text: string;
     cta_link: string;
+    history_section_tag: string;
+    history_section_title: string;
+    differentiators_section_title: string;
+    gallery_section_title: string;
+    partners_section_title: string;
     gallery: GalleryItem[];
     values: ValueCard[];
   } | null;
@@ -213,8 +218,8 @@ export default function AboutPage() {
           <section className="py-20 bg-gray-50">
             <div className="mx-auto max-w-[1216px] px-6">
                 <div className="text-center mb-16">
-                    <span className="text-[#E65100] font-bold uppercase tracking-wider">Nossa Jornada</span>
-                    <h2 className="text-3xl font-bold text-[#2C3E50] mt-2">História da Competec</h2>
+                    <span className="text-[#E65100] font-bold uppercase tracking-wider">{about.history_section_tag}</span>
+                    <h2 className="text-3xl font-bold text-[#2C3E50] mt-2">{about.history_section_title}</h2>
                 </div>
 
                 <div className="relative border-l-4 border-gray-200 ml-6 lg:ml-1/2 space-y-12">
@@ -242,7 +247,7 @@ export default function AboutPage() {
         <section className="py-20 bg-[#2C3E50] text-white">
              <div className="mx-auto max-w-[1216px] px-6">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold">Nossos Diferenciais</h2>
+                    <h2 className="text-3xl font-bold">{about.differentiators_section_title}</h2>
                 </div>
                 <div className="grid md:grid-cols-3 gap-8">
                     {differentiators.map((diff) => (
@@ -263,7 +268,7 @@ export default function AboutPage() {
         {/* 4. GALERIA */}
         {about.gallery && about.gallery.length > 0 && (
           <div className="mt-12">
-            <h3 className="mb-8 text-2xl font-bold text-[#2C3E50]">Nossa Estrutura</h3>
+            <h3 className="mb-8 text-2xl font-bold text-[#2C3E50]">{about.gallery_section_title}</h3>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               {about.gallery.map((item, index) => (
                 <div
@@ -307,7 +312,7 @@ export default function AboutPage() {
       {partners && partners.length > 0 && (
         <section className="py-20 bg-gray-50 border-t border-gray-100">
             <div className="mx-auto max-w-[1216px] px-6 text-center">
-                <h2 className="text-2xl font-bold text-[#2C3E50] mb-12 opacity-80">Empresas que confiam na Competec</h2>
+                <h2 className="text-2xl font-bold text-[#2C3E50] mb-12 opacity-80">{about.partners_section_title}</h2>
                 <div className="flex flex-wrap justify-center gap-12 items-center opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
                     {partners.map((partner) => (
                         <div key={partner.id} className="relative h-16 w-32 lg:h-20 lg:w-40">

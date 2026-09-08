@@ -20,6 +20,7 @@ interface TestimonialItem {
 interface SectionData {
   title: string;
   subtitle: string;
+  intro_text: string;
   image: string;
 }
 
@@ -90,7 +91,7 @@ export function Testimonials({ items, section }: TestimonialsProps) {
                 {section.subtitle}
               </p>
               <p className="mt-2 font-semibold text-gray-800">
-                Veja os depoimentos de quem confiou na Competec:
+                {section.intro_text}
               </p>
             </div>
 

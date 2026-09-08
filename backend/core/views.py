@@ -4,16 +4,16 @@ from django.shortcuts import get_object_or_404
 
 # Imports dos Models
 from .models import (
-    BlogPost, BlogSection, Differentiator, FooterConfig, HeroSection, 
-    AboutSection, HistorySection, InformationPage, Partner, Service, ServicesSection, 
+    BlogPost, BlogSection, Differentiator, DifferentiatorsSection, FooterConfig, HeroSection,
+    AboutSection, HistorySection, InformationPage, Partner, PartnersSection, Service, ServicesSection,
     TestimonialsSection, Testimonial, NavbarConfig
 )
 
 # Imports dos Serializers
 from .serializers import (
-    BlogPostSerializer, BlogSectionSerializer, FooterConfigSerializer, 
-    HeroSectionSerializer, AboutSectionSerializer, DifferentiatorSerializer, 
-    HistorySectionSerializer, InformationPageSerializer, PartnerSerializer, ServiceSerializer, 
+    BlogPostSerializer, BlogSectionSerializer, FooterConfigSerializer,
+    HeroSectionSerializer, AboutSectionSerializer, DifferentiatorSerializer, DifferentiatorsSectionSerializer,
+    HistorySectionSerializer, InformationPageSerializer, PartnerSerializer, PartnersSectionSerializer, ServiceSerializer,
     ServicesSectionSerializer, TestimonialSerializer, TestimonialsSectionSerializer, NavbarConfigSerializer
 )
 
@@ -25,10 +25,12 @@ class HomeDataView(APIView):
         hero_data = HeroSection.objects.filter(is_active=True).first()
         about_data = AboutSection.objects.filter(is_active=True).first()
         differentiators_data = Differentiator.objects.all().order_by('order')
+        differentiators_section = DifferentiatorsSection.objects.filter(is_active=True).first()
         services_data = Service.objects.filter(is_active=True).order_by('order')
         services_section_data = ServicesSection.objects.filter(is_active=True).first()
         history_data = HistorySection.objects.filter(is_active=True).first()
         partners_data = Partner.objects.all().order_by('order')
+        partners_section = PartnersSection.objects.filter(is_active=True).first()
         testimonials_data = Testimonial.objects.all().order_by('order')
         testimonials_section = TestimonialsSection.objects.filter(is_active=True).first()
         blog_section = BlogSection.objects.filter(is_active=True).first()
@@ -39,10 +41,12 @@ class HomeDataView(APIView):
             "hero": HeroSectionSerializer(hero_data).data if hero_data else None,
             "about": AboutSectionSerializer(about_data).data if about_data else None,
             "differentiators": DifferentiatorSerializer(differentiators_data, many=True).data,
+            "differentiators_section": DifferentiatorsSectionSerializer(differentiators_section).data if differentiators_section else None,
             "services": ServiceSerializer(services_data, many=True).data,
             "services_section": ServicesSectionSerializer(services_section_data).data if services_section_data else None,
             "history": HistorySectionSerializer(history_data).data if history_data else None,
             "partners": PartnerSerializer(partners_data, many=True).data,
+            "partners_section": PartnersSectionSerializer(partners_section).data if partners_section else None,
             "testimonials": TestimonialSerializer(testimonials_data, many=True).data,
             "testimonials_section": TestimonialsSectionSerializer(testimonials_section).data if testimonials_section else None,
             "blog_section": BlogSectionSerializer(blog_section).data if blog_section else None,

@@ -37,6 +37,12 @@ interface HomeData {
     order: number;
   }>;
 
+  differentiators_section: {
+    tag: string;
+    title: string;
+    subtitle: string;
+  } | null;
+
   // CORREÇÃO 1: O slug continua aqui (não remova!)
   services: Array<{
     id: number;
@@ -73,6 +79,7 @@ interface HomeData {
   testimonials_section: {
     title: string;
     subtitle: string;
+    intro_text: string;
     image: string;
   } | null;
 
@@ -81,6 +88,11 @@ interface HomeData {
     name: string;
     logo: string;
   }>;
+
+  partners_section: {
+    tag: string;
+    title: string;
+  } | null;
 
   blog_section: {
     tag: string;
@@ -108,10 +120,8 @@ interface HomeData {
     whatsapp: string;
     whatsapp_2: string;
     email: string;
-    facebook: string;
     instagram: string;
-    youtube: string;
-    linkedin: string; // <--- CORREÇÃO 2: ADICIONADO AQUI!
+    linkedin: string;
     copyright_text: string;
   } | null;
 }
@@ -151,7 +161,9 @@ export default function HomePage() {
       
       <div className="bg-[#E5E5E5]">
         {data.about && <About data={data.about} />}
-        {data.differentiators && <Differentiators data={data.differentiators} />}
+        {data.differentiators && (
+          <Differentiators data={data.differentiators} section={data.differentiators_section} />
+        )}
       </div>
 
       {data.services && data.services_section && (
@@ -170,7 +182,7 @@ export default function HomePage() {
         />
       )}
 
-      {data.partners && <Partners data={data.partners} />}
+      {data.partners && <Partners data={data.partners} section={data.partners_section} />}
 
       {data.blog_section && data.blog_posts && (
         <BlogPreview posts={data.blog_posts} section={data.blog_section} />

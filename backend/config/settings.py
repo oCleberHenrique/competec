@@ -215,7 +215,12 @@ UNFOLD = {
                         "link": reverse_lazy("admin:core_aboutsection_changelist"),
                     },
                     {
-                        "title": _("3. Diferenciais (Ícones)"),
+                        "title": _("3a. Diferenciais (Título da Seção)"),
+                        "icon": "title",
+                        "link": reverse_lazy("admin:core_differentiatorssection_changelist"),
+                    },
+                    {
+                        "title": _("3b. Diferenciais (Ícones)"),
                         "icon": "verified",
                         "link": reverse_lazy("admin:core_differentiator_changelist"),
                     },
@@ -225,7 +230,12 @@ UNFOLD = {
                         "link": reverse_lazy("admin:core_historysection_changelist"),
                     },
                     {
-                        "title": _("5. Logos de Parceiros"),
+                        "title": _("5a. Parceiros (Título da Seção)"),
+                        "icon": "title",
+                        "link": reverse_lazy("admin:core_partnerssection_changelist"),
+                    },
+                    {
+                        "title": _("5b. Logos de Parceiros"),
                         "icon": "handshake",
                         "link": reverse_lazy("admin:core_partner_changelist"),
                     },

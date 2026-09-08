@@ -38,6 +38,17 @@ class AboutSection(models.Model):
     cta_text = models.CharField("Texto do Botão", max_length=50, default="Entre em Contato")
     cta_link = models.CharField("Link do WhatsApp", max_length=200, default="https://wa.me/5562995530750")
 
+    # --- TÍTULOS DE SEÇÃO (INTERNA) ---
+    history_section_tag = models.CharField("Tag da Seção História", max_length=50, default="Nossa Jornada")
+    history_section_title = models.CharField("Título da Seção História", max_length=200, default="História da Competec")
+    differentiators_section_title = models.CharField(
+        "Título da Seção Diferenciais", max_length=200, default="Nossos Diferenciais"
+    )
+    gallery_section_title = models.CharField("Título da Galeria", max_length=200, default="Nossa Estrutura")
+    partners_section_title = models.CharField(
+        "Título da Seção Parceiros", max_length=200, default="Empresas que confiam na Competec"
+    )
+
     is_active = models.BooleanField("Ativo?", default=True)
 
     class Meta:
@@ -62,6 +73,24 @@ class AboutValueCard(models.Model):
     class Meta: ordering = ["order"]
 
 # --- 3. DIFERENCIAIS ---
+class DifferentiatorsSection(models.Model):
+    tag = models.CharField("Tag Superior (Laranja)", max_length=50, default="Nossa cultura")
+    title = models.CharField(
+        "Título Principal", max_length=200, default="Três pilares.\nSua operação mais eficiente.",
+        help_text="Use uma quebra de linha para separar a primeira linha do título."
+    )
+    subtitle = models.TextField(
+        "Texto de Apoio", default="A Competec é o seu parceiro para aumentar a eficiência, previsibilidade e maturidade das operações industriais"
+    )
+    is_active = models.BooleanField("Ativo?", default=True)
+
+    class Meta:
+        verbose_name = "Seção Diferenciais (Capa)"
+        verbose_name_plural = "Seção Diferenciais (Capa)"
+
+    def __str__(self):
+        return self.title
+
 class Differentiator(models.Model):
     title = models.CharField("Título", max_length=100)
     description = models.TextField("Descrição")
@@ -200,6 +229,21 @@ class HistorySection(models.Model):
         return self.title
 
 # --- 7. PARCEIROS (Logos) ---
+class PartnersSection(models.Model):
+    tag = models.CharField("Tag Superior (Laranja)", max_length=50, default="Cases")
+    title = models.CharField(
+        "Título Principal", max_length=200, default="Transformando desafios\nem cases de sucesso.",
+        help_text="Use uma quebra de linha para separar a primeira linha do título."
+    )
+    is_active = models.BooleanField("Ativo?", default=True)
+
+    class Meta:
+        verbose_name = "Seção Parceiros (Capa)"
+        verbose_name_plural = "Seção Parceiros (Capa)"
+
+    def __str__(self):
+        return self.title
+
 class Partner(models.Model):
     name = models.CharField("Nome da Empresa", max_length=100)
     logo = models.ImageField("Logo", upload_to="partners/")
@@ -233,6 +277,9 @@ class Testimonial(models.Model):
 class TestimonialsSection(models.Model):
     title = models.CharField("Título Principal", max_length=200, default="Parceiro técnico de indústrias\nQue não podem parar")
     subtitle = models.TextField("Texto de Apoio")
+    intro_text = models.CharField(
+        "Texto acima do carrossel", max_length=200, default="Veja os depoimentos de quem confiou na Competec:"
+    )
     image = models.ImageField("Imagem de Fundo (Rapaz)", upload_to="testimonials_bg/")
     is_active = models.BooleanField("Ativo?", default=True)
 
@@ -259,6 +306,10 @@ class BlogSection(models.Model):
 class BlogPost(models.Model):
     title = models.CharField("Título do Post", max_length=200)
     slug = models.SlugField("Slug (URL)", unique=True, help_text="Identificador único para a URL")
+    category = models.CharField(
+        "Categoria", max_length=50, default="Artigo",
+        help_text="Selo exibido no card do post. Ex: Artigo, Notícia, Guia."
+    )
     image = models.ImageField("Capa do Post", upload_to="blog/")
     content = models.TextField("Conteúdo Completo do Post")
     author = models.CharField("Autor", max_length=100, default="Time Competec")
@@ -346,9 +397,19 @@ class NavbarConfig(models.Model):
         help_text="Link do botãozinho verde de WhatsApp que fica fixo no canto da tela em todas as páginas. Formato: https://wa.me/55DDDNUMERO",
     )
 
+    seo_title = models.CharField(
+        "Título da Aba do Navegador (SEO)", max_length=70, default="Competec - Soluções Industriais",
+        help_text="Aparece na aba do navegador e no título dos resultados do Google, em todas as páginas do site."
+    )
+    seo_description = models.TextField(
+        "Descrição para Buscadores (SEO)", max_length=200,
+        default="Especialistas em Automação, Metrologia e Manutenção Industrial.",
+        help_text="Texto que aparece embaixo do link do site nos resultados do Google e quando o link é compartilhado."
+    )
+
     class Meta:
-        verbose_name = "Configurações Gerais (Logo e WhatsApp)"
-        verbose_name_plural = "Configurações Gerais (Logo e WhatsApp)"
+        verbose_name = "Configurações Gerais (Logo, WhatsApp e SEO)"
+        verbose_name_plural = "Configurações Gerais (Logo, WhatsApp e SEO)"
 
     def __str__(self):
         return "Configuração Principal do Navbar"

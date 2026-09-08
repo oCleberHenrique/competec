@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from .models import (
-    BlogSection, FooterConfig, AboutGalleryImage, AboutValueCard, 
-    HeroSection, AboutSection, Differentiator, HistorySection, 
-    InformationGalleryImage, InformationPage, Partner, Service, ServiceBenefit,
+    BlogSection, FooterConfig, AboutGalleryImage, AboutValueCard,
+    HeroSection, AboutSection, Differentiator, DifferentiatorsSection, HistorySection,
+    InformationGalleryImage, InformationPage, Partner, PartnersSection, Service, ServiceBenefit,
     ServiceEquipmentCategory, ServiceFAQ, ServiceGalleryImage,
     ServicesSection, Testimonial, TestimonialsSection, BlogPost, NavbarConfig
 )
@@ -10,6 +10,16 @@ from .models import (
 class HeroSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = HeroSection
+        fields = '__all__'
+
+class DifferentiatorsSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DifferentiatorsSection
+        fields = '__all__'
+
+class PartnersSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PartnersSection
         fields = '__all__'
 
 # Serializer da Galeria

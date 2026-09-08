@@ -31,12 +31,19 @@ interface DifferentiatorItem {
   is_highlighted: boolean;
 }
 
+interface DifferentiatorsSectionData {
+  tag: string;
+  title: string;
+  subtitle: string;
+}
+
 interface DifferentiatorsProps {
   data: DifferentiatorItem[];
+  section?: DifferentiatorsSectionData | null;
 }
 
 // --- COMPONENTE PRINCIPAL ---
-export function Differentiators({ data }: DifferentiatorsProps) {
+export function Differentiators({ data, section }: DifferentiatorsProps) {
   if (!data || data.length === 0) return null;
 
   return (
@@ -50,15 +57,14 @@ export function Differentiators({ data }: DifferentiatorsProps) {
         <div className="mb-16 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-end">
           <div>
             <span className="text-sm font-bold uppercase text-[#E65100]">
-              Nossa cultura
+              {section?.tag || "Nossa cultura"}
             </span>
-            <h2 className="mt-2 text-4xl font-bold leading-tight text-[#2C3E50] lg:text-5xl">
-              Três pilares.<br />
-              Sua operação mais eficiente.
+            <h2 className="mt-2 whitespace-pre-line text-4xl font-bold leading-tight text-[#2C3E50] lg:text-5xl">
+              {section?.title || "Três pilares.\nSua operação mais eficiente."}
             </h2>
           </div>
           <div className="pb-2 text-lg text-gray-600 lg:max-w-md">
-            A Competec é o seu parceiro para aumentar a eficiência, previsibilidade e maturidade das operações industriais
+            {section?.subtitle || "A Competec é o seu parceiro para aumentar a eficiência, previsibilidade e maturidade das operações industriais"}
           </div>
         </div>
 
