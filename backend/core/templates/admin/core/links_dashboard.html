@@ -1,0 +1,103 @@
+{% extends "unfold/layouts/base_simple.html" %}
+{% load i18n static %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block title %}
+    {{ title }} | {{ site_title|default:_('Django site admin') }}
+{% endblock %}
+
+{% block content %}
+  {% include "unfold/helpers/messages.html" %}
+
+  <div class="flex flex-col gap-8 max-w-5xl mx-auto pb-16">
+
+      <div class="pt-8">
+          <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Links de Contato (CTAs)</h1>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              Todos os botões de contato/WhatsApp do site, num lugar só. Cada campo explica exatamente qual botão do site ele controla.
+          </p>
+      </div>
+
+      <form method="post">
+          {% csrf_token %}
+
+          <div class="!bg-white dark:!bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div class="bg-gray-50 dark:bg-gray-900/50 px-8 py-4 border-b border-gray-200 dark:border-gray-700">
+                  <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100">Links Gerais do Site</h2>
+              </div>
+              <div class="p-8 space-y-6">
+                  {% for field in global_form %}
+                      <div>
+                          <label for="{{ field.id_for_label }}" class="block text-sm font-bold text-gray-800 dark:text-gray-100 mb-1">
+                              {{ field.label }}
+                          </label>
+                          {% if field.help_text %}
+                              <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ field.help_text }}</p>
+                          {% endif %}
+                          {{ field }}
+                          {% for error in field.errors %}
+                              <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                          {% endfor %}
+                      </div>
+                  {% endfor %}
+              </div>
+          </div>
+
+          <div class="!bg-white dark:!bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mt-8">
+              <div class="bg-gray-50 dark:bg-gray-900/50 px-8 py-4 border-b border-gray-200 dark:border-gray-700">
+                  <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100">Botão "Falar com Especialista" de cada Serviço</h2>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Link do CTA na página interna de cada serviço.</p>
+              </div>
+              <div class="p-8 space-y-4">
+                  {{ service_formset.management_form }}
+                  {% for form in service_formset %}
+                      <div>
+                          <label for="{{ form.cta_link.id_for_label }}" class="block text-sm font-bold text-gray-800 dark:text-gray-100 mb-1">
+                              {{ form.instance.title }}
+                          </label>
+                          {{ form.id }}
+                          {{ form.cta_link }}
+                          {% for error in form.cta_link.errors %}
+                              <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                          {% endfor %}
+                      </div>
+                  {% empty %}
+                      <p class="text-sm text-gray-500 dark:text-gray-400">Nenhum serviço cadastrado ainda.</p>
+                  {% endfor %}
+              </div>
+          </div>
+
+          <div class="!bg-white dark:!bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mt-8">
+              <div class="bg-gray-50 dark:bg-gray-900/50 px-8 py-4 border-b border-gray-200 dark:border-gray-700">
+                  <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100">Botão de Contato de cada Página de Informação</h2>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Link do CTA "Entre em contato" em cada página de informação (ex: cidades atendidas).</p>
+              </div>
+              <div class="p-8 space-y-4">
+                  {{ infopage_formset.management_form }}
+                  {% for form in infopage_formset %}
+                      <div>
+                          <label for="{{ form.cta_link.id_for_label }}" class="block text-sm font-bold text-gray-800 dark:text-gray-100 mb-1">
+                              {{ form.instance.title }}
+                          </label>
+                          {{ form.id }}
+                          {{ form.cta_link }}
+                          {% for error in form.cta_link.errors %}
+                              <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                          {% endfor %}
+                      </div>
+                  {% empty %}
+                      <p class="text-sm text-gray-500 dark:text-gray-400">Nenhuma página de informação cadastrada ainda.</p>
+                  {% endfor %}
+              </div>
+          </div>
+
+          <div class="mt-8 flex justify-end">
+              <button type="submit" class="bg-[#E65100] hover:bg-[#ff6d1f] text-white font-bold text-sm px-6 py-3 rounded-md transition-colors">
+                  Salvar Todos os Links
+              </button>
+          </div>
+      </form>
+
+  </div>
+{% endblock %}

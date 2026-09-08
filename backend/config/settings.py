@@ -191,9 +191,14 @@ UNFOLD = {
                         "icon": "dashboard",
                         "link": reverse_lazy("admin:index"),
                     },
+                    {
+                        "title": _("Links de Contato (CTAs)"),
+                        "icon": "link",
+                        "link": reverse_lazy("admin:links-dashboard"),
+                    },
                 ],
             },
-            
+
             # --- BLOCO 1: HOME PAGE ---
             {
                 "title": _("Edição da Home Page"),

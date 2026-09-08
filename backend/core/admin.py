@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
+from django.urls import path
 from unfold.admin import ModelAdmin, TabularInline  # <--- O TabularInline estava faltando aqui!
+
+from .admin_links import links_dashboard_view
 
 # Importe TODOS os seus models
 from .models import (
@@ -155,3 +158,21 @@ class NavbarConfigAdmin(admin.ModelAdmin):
         if self.model.objects.exists():
             return False
         return super().has_add_permission(request)
+
+
+# --- 12. LINKS DE CONTATO (CTAs) — TELA ÚNICA ---
+_original_get_urls = admin.site.get_urls
+
+
+def _get_urls_with_links_dashboard():
+    custom_urls = [
+        path(
+            "links/",
+            admin.site.admin_view(links_dashboard_view),
+            name="links-dashboard",
+        ),
+    ]
+    return custom_urls + _original_get_urls()
+
+
+admin.site.get_urls = _get_urls_with_links_dashboard
