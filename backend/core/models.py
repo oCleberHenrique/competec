@@ -338,11 +338,6 @@ class NavbarConfig(models.Model):
     logo = models.ImageField(upload_to='navbar/', verbose_name="Logo do Site")
     alt_text = models.CharField(max_length=255, default="Competec", verbose_name="Texto Alternativo (Alt)")
 
-    # Redes Sociais (Opcional, mas bom ter)
-    facebook_link = models.URLField(blank=True, null=True, verbose_name="Facebook")
-    instagram_link = models.URLField(blank=True, null=True, verbose_name="Instagram")
-    linkedin_link = models.URLField(blank=True, null=True, verbose_name="LinkedIn")
-
     floating_whatsapp_link = models.CharField(
         "Link do WhatsApp (Botão Flutuante)",
         max_length=200,
@@ -352,8 +347,8 @@ class NavbarConfig(models.Model):
     )
 
     class Meta:
-        verbose_name = "Configurações Gerais (Logo, WhatsApp e Redes Sociais)"
-        verbose_name_plural = "Configurações Gerais (Logo, WhatsApp e Redes Sociais)"
+        verbose_name = "Configurações Gerais (Logo e WhatsApp)"
+        verbose_name_plural = "Configurações Gerais (Logo e WhatsApp)"
 
     def __str__(self):
         return "Configuração Principal do Navbar"

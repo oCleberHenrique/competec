@@ -34,7 +34,7 @@ export default function BlogListingPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch(`${getApiUrl()}/api/home-data/`, {
+        const res = await fetch(`${getApiUrl()}/api/blog-posts/`, {
           cache: "no-store",
         });
         if (!res.ok) throw new Error("Falha ao buscar dados");

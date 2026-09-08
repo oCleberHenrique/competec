@@ -98,6 +98,19 @@ class ServiceDetailView(APIView):
             "footer": FooterConfigSerializer(footer_data).data if footer_data else None
         })
 
+# --- 4b. LISTAGEM COMPLETA DO BLOG ---
+class BlogListView(APIView):
+    permission_classes = []
+
+    def get(self, request):
+        blog_posts = BlogPost.objects.all().order_by('order')
+        footer_data = FooterConfig.objects.first()
+
+        return Response({
+            "blog_posts": BlogPostSerializer(blog_posts, many=True).data,
+            "footer": FooterConfigSerializer(footer_data).data if footer_data else None
+        })
+
 # --- 4. DETALHE DO BLOG ---
 class BlogPostDetailView(APIView):
     permission_classes = []
@@ -136,15 +149,15 @@ class NavbarDataView(APIView):
         config = NavbarConfig.objects.first()
         config_data = NavbarConfigSerializer(config).data if config else {}
 
-        # 2. Lógica para pegar o último post de informação
-        latest_info = InformationPage.objects.filter(is_active=True).order_by('-id').first()
+        # 2. Todas as páginas de informação ativas (não só a mais recente)
+        information_pages = InformationPage.objects.filter(is_active=True).order_by('title').values('title', 'slug')
         active_services = Service.objects.filter(is_active=True).order_by('order').values('title', 'slug', 'icon')
-        
+
         # 3. Mescla os dados
         response_data = {
-            **config_data, 
-            "latest_info_slug": latest_info.slug if latest_info else None,
+            **config_data,
+            "information_pages": list(information_pages),
             "services": list(active_services),
         }
-        
+
         return Response(response_data)

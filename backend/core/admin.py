@@ -150,7 +150,6 @@ class NavbarConfigAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Logo", {"fields": ("logo", "alt_text")}),
         ("WhatsApp Flutuante", {"fields": ("floating_whatsapp_link",)}),
-        ("Redes Sociais", {"fields": ("facebook_link", "instagram_link", "linkedin_link")}),
     )
 
     # Isso impede que criem mais de uma configuração (Trava para ter apenas 1 logo)

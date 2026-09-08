@@ -13,9 +13,14 @@ interface NavService {
   icon: string | null;
 }
 
+interface NavInformationPage {
+  title: string;
+  slug: string;
+}
+
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [latestInfoSlug, setLatestInfoSlug] = useState<string | null>(null);
+  const [informationPages, setInformationPages] = useState<NavInformationPage[]>([]);
   const [logo, setLogo] = useState<string | null>(null);
   const [services, setServices] = useState<NavService[]>([]);
 
@@ -23,8 +28,8 @@ export function Navbar() {
     fetch(`${getApiUrl()}/api/navbar-data/`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.latest_info_slug) {
-          setLatestInfoSlug(data.latest_info_slug);
+        if (Array.isArray(data.information_pages)) {
+          setInformationPages(data.information_pages);
         }
         if (data.logo) {
           setLogo(data.logo);
@@ -41,10 +46,6 @@ export function Navbar() {
     { label: "QUEM SOMOS", href: "/quem-somos" },
     { label: "BLOG", href: "/#blog" },
   ];
-
-  if (latestInfoSlug) {
-    menuItems.push({ label: "INFORMAÇÕES", href: `/informacoes/${latestInfoSlug}` });
-  }
 
   const getServiceHref = (slug: string) => (slug === "calibracao" ? "/calibracao" : `/solucoes/${slug}`);
 
@@ -133,6 +134,37 @@ export function Navbar() {
               </Link>
             ))}
 
+            {informationPages.length === 1 && (
+              <Link
+                href={`/informacoes/${informationPages[0].slug}`}
+                className="text-sm font-bold text-gray-200 transition-colors hover:text-[#E65100]"
+              >
+                INFORMAÇÕES
+              </Link>
+            )}
+
+            {informationPages.length > 1 && (
+              <div className="group relative">
+                <span className="inline-flex cursor-default items-center gap-1 text-sm font-bold text-gray-200 transition-colors group-hover:text-[#E65100]">
+                  INFORMAÇÕES
+                  <ChevronDown size={16} className="transition-transform group-hover:rotate-180" />
+                </span>
+
+                <div className="invisible absolute left-1/2 top-full z-50 mt-4 w-[260px] -translate-x-1/2 rounded-xl border border-white/10 bg-[#2C3E50] p-3 opacity-0 shadow-2xl transition-all group-hover:visible group-hover:opacity-100">
+                  <div className="absolute -top-4 left-0 h-4 w-full" />
+                  {informationPages.map((page) => (
+                    <Link
+                      key={page.slug}
+                      href={`/informacoes/${page.slug}`}
+                      className="block rounded-lg px-3 py-2 text-sm font-bold text-gray-100 transition-colors hover:bg-white/10 hover:text-[#E65100]"
+                    >
+                      {page.title}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <Link href="#contact">
               <Button className="border-2 border-white bg-transparent text-white font-bold rounded-lg transition-all hover:bg-white hover:text-[#E65100] hover:border-white">
                 CONTATO
@@ -199,6 +231,34 @@ export function Navbar() {
                 {item.label}
               </Link>
             ))}
+
+            {informationPages.length === 1 && (
+              <Link
+                href={`/informacoes/${informationPages[0].slug}`}
+                className="border-b border-gray-100 pb-2 text-sm font-bold text-gray-700 hover:text-[#E65100]"
+                onClick={() => setIsOpen(false)}
+              >
+                INFORMAÇÕES
+              </Link>
+            )}
+
+            {informationPages.length > 1 && (
+              <div className="border-b border-gray-100 pb-2">
+                <span className="block text-sm font-bold text-gray-700">INFORMAÇÕES</span>
+                <div className="mt-3 flex flex-col gap-2 pl-4">
+                  {informationPages.map((page) => (
+                    <Link
+                      key={page.slug}
+                      href={`/informacoes/${page.slug}`}
+                      className="text-sm font-medium text-gray-500 hover:text-[#E65100]"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {page.title}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <Link href="#contact" onClick={() => setIsOpen(false)}>
               <Button className="w-full bg-[#E65100] hover:bg-[#bf4300] text-white font-bold mt-2">

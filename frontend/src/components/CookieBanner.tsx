@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { X } from "lucide-react";
 
 export function CookieBanner() {
@@ -29,10 +28,8 @@ export function CookieBanner() {
       <div className="mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="text-sm text-gray-300 text-center md:text-left">
           <p>
-            Utilizamos cookies para melhorar sua experiência. Ao continuar navegando, você concorda com nossa{" "}
-            <Link href="#" className="text-[#E65100] hover:underline font-bold">
-              Política de Privacidade
-            </Link>.
+            Utilizamos cookies para melhorar sua experiência. Ao continuar navegando, você concorda com nossa
+            política de privacidade.
           </p>
         </div>
         <div className="flex items-center gap-3">
